@@ -39,18 +39,18 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         inst = this;
 
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
+        if (extras != null) {
             setAlarmText(extras.getString("msg"));
         }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
@@ -61,13 +61,13 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         silence.setOnClickListener(this);
 
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
+        if (extras != null) {
             setAlarmText(extras.getString("msg"));
         }
     }
 
-    public void onToggleClicked(View view){
-        if(((ToggleButton) view).isChecked()){
+    public void onToggleClicked(View view) {
+        if (((ToggleButton) view).isChecked()) {
             Log.d("AlarmActivity", "Alarm On");
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
@@ -82,7 +82,7 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void silence(){
+    public void silence() {
         Intent stopIntent = new Intent(this, RingtonePlayingService.class);
         this.stopService(stopIntent);
     }
@@ -93,7 +93,7 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.silence_button:
                 silence();
                 break;

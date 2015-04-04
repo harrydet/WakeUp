@@ -11,10 +11,10 @@ import android.util.Log;
 /**
  * Created by Harry on 3/4/2015.
  */
-public class AlarmService extends IntentService{
+public class AlarmService extends IntentService {
     private NotificationManager alarmNotificationManager;
 
-    public AlarmService(){
+    public AlarmService() {
         super("AlarmService");
     }
 
@@ -23,7 +23,7 @@ public class AlarmService extends IntentService{
         sendNotification("Wake Up !!!");
     }
 
-    public void sendNotification(String msg){
+    public void sendNotification(String msg) {
         Log.d("AlarmService", "Preparing to send notification...: " + msg);
         alarmNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 

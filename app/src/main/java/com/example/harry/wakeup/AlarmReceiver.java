@@ -13,11 +13,11 @@ import android.util.Log;
 /**
  * Created by Harry on 3/4/2015.
  */
-public class AlarmReceiver extends WakefulBroadcastReceiver{
+public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(AlarmActivity.instance() == null){
+        if (AlarmActivity.instance() == null) {
             Log.d("Err:(", "Activity is null");
         } else {
             Log.d("No Err :D", "Activity is gucci");
@@ -26,7 +26,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver{
         inst.setAlarmText("Wakey Wakey Sunshine");
 
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if(alarmUri == null){
+        if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
         Intent startIntent = new Intent(context, RingtonePlayingService.class);

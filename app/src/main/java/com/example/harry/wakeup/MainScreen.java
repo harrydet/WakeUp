@@ -39,9 +39,11 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
+        // Locate the viewpager in activity_main.xml
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 
-       actionbar = getActionBar();
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        // Set the ViewPagerAdapter into ViewPager
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
 
     }
 
