@@ -37,7 +37,7 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_screen);
+        setContentView(R.layout.activity_main);
 
         // Locate the viewpager in activity_main.xml
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
@@ -83,7 +83,7 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
