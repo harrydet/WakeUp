@@ -7,9 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    final int PAGE_COUNT = 2;
+    final int PAGE_COUNT = 3;
     // Tab Titles
-    private String tabtitles[] = new String[]{"Alarms", "Tasks"};
+    private String tabtitles[] = new String[]{"Today's List", "Alarms", "Tasks"};
     Context context;
 
     public ViewPagerAdapter(FragmentManager fm) {
@@ -24,12 +24,14 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-
             case 0:
-                return AlarmFragment.newInstance("0", "Alarms");
-
+                return TaskListFragment.newInstance("0", "Today's List");
             case 1:
-                return TaskListFragment.newInstance("1", "Tasks");
+                return AlarmFragment.newInstance("1", "Alarms");
+            case 2:
+                return TaskListFragment.newInstance("2", "Tasks");
+
+
             default:
                 return null;
 

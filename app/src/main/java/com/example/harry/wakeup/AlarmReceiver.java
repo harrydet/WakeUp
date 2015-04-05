@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
@@ -17,13 +20,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (AlarmActivity.instance() == null) {
-            Log.d("Err:(", "Activity is null");
-        } else {
-            Log.d("No Err :D", "Activity is gucci");
-        }
-        AlarmActivity inst = AlarmActivity.instance();
-        inst.setAlarmText("Wakey Wakey Sunshine");
+
+        SharedPreferences settings = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("alarm_text", "Wakey Wakey :)");
+        editor.commit();
 
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {

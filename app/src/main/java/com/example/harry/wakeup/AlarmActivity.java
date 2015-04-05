@@ -56,6 +56,7 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
         alarmTextView = (TextView) findViewById(R.id.alarmText);
         ToggleButton alarmToggle = (ToggleButton) findViewById(R.id.alarmToggle);
+        alarmToggle.setOnClickListener(this);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Button silence = (Button) findViewById(R.id.silence_button);
         silence.setOnClickListener(this);
