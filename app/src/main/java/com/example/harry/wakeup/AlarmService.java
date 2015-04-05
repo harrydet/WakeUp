@@ -16,7 +16,7 @@ import android.util.Log;
 public class AlarmService extends IntentService {
     private NotificationManager alarmNotificationManager;
 
-    public AlarmService() {
+       public AlarmService() {
         super("AlarmService");
     }
 

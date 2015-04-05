@@ -1,9 +1,12 @@
 package com.example.harry.wakeup;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.preference.PreferenceManager;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +15,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TodayList.OnFragmentInteractionListener} interface
+ * {@link TodayListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TodayList#newInstance} factory method to
+ * Use the {@link TodayListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayList extends Fragment {
+public class TodayListFragment extends ListFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,8 +41,8 @@ public class TodayList extends Fragment {
      * @return A new instance of fragment TodayList.
      */
     // TODO: Rename and change types and number of parameters
-    public static TodayList newInstance(String param1, String param2) {
-        TodayList fragment = new TodayList();
+    public static TodayListFragment newInstance(String param1, String param2) {
+        TodayListFragment fragment = new TodayListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -47,7 +50,7 @@ public class TodayList extends Fragment {
         return fragment;
     }
 
-    public TodayList() {
+    public TodayListFragment() {
         // Required empty public constructor
     }
 
@@ -58,6 +61,12 @@ public class TodayList extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        SharedPreferences settings = PreferenceManager
+                .getDefaultSharedPreferences(getActivity().getApplicationContext());
+        String jsonString = settings.getString("json_object", null/*default value*/);
+
+
     }
 
     @Override
@@ -65,17 +74,6 @@ public class TodayList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_today_list, container, false);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -96,7 +94,7 @@ public class TodayList extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onTodayListFragmentInteraction(String id);
     }
 
 }

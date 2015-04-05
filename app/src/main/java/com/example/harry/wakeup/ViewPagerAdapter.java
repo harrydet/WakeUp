@@ -25,7 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TaskListFragment.newInstance("0", "Today's List");
+                return TodayListFragment.newInstance("0", "Today's List");
             case 1:
                 return AlarmFragment.newInstance("1", "Alarms");
             case 2:
