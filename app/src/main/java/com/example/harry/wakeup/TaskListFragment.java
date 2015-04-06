@@ -1,5 +1,6 @@
 package com.example.harry.wakeup;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,6 +8,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListAdapter;
 
 import java.net.URI;
@@ -20,7 +22,7 @@ import java.net.URI;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class TaskListFragment extends ListFragment {
+public class TaskListFragment extends ListFragment implements View.OnClickListener{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,6 +32,8 @@ public class TaskListFragment extends ListFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private Button addTaskButton;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -74,6 +78,8 @@ public class TaskListFragment extends ListFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tasklist, container, false);
 
+        addTaskButton = (Button) view.findViewById(R.id.addButton);
+        addTaskButton.setOnClickListener(this);
 
 
         return view;
@@ -83,6 +89,19 @@ public class TaskListFragment extends ListFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.addButton:
+                Intent intent = new Intent(getActivity().getApplicationContext(), NewTaskListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
     }
 
 
