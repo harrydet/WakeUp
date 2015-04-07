@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_TASKLIST = "CREATE TABLE " + TABLE_TASKLIST
             + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TASKLIST_NAME + " TEXT," + KEY_TASKLIST_SUBTEXT
-            + "TEXT" + ")";
+            + " TEXT" + ")";
 
     private static final String CREATE_TABLE_TASK_TASKLIST = "CREATE TABLE "
             + TABLE_TASK_TASKLIST + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
