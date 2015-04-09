@@ -17,14 +17,14 @@ import java.util.List;
 /**
  * Created by Harry on 4/9/2015.
  */
-public class TaskListAdapter extends BaseAdapter implements View.OnClickListener{
+public class ListTaskListAdapter extends BaseAdapter implements View.OnClickListener{
 
     private Activity activity;
     private List<TaskList> taskLists;
     private LayoutInflater mInflater;
     private DatabaseHelper dbHelper;
 
-    public TaskListAdapter(Activity activity, List<TaskList> taskLists) {
+    public ListTaskListAdapter(Activity activity, List<TaskList> taskLists) {
         super();
         this.activity = activity;
         this.taskLists = taskLists;

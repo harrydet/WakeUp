@@ -44,6 +44,8 @@
         android:layout_height="fill_parent"
         android:layout_weight="0.3"
         android:id="@+id/delete_button"
-        android:text="@string/delete_button_text"/>
+        android:text="@string/delete_button_text"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
 
 </LinearLayout>

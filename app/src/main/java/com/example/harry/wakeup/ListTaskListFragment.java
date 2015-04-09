@@ -1,5 +1,6 @@
 package com.example.harry.wakeup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,10 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class TaskListFragment extends ListFragment implements View.OnClickListener{
+public class ListTaskListFragment extends ListFragment implements View.OnClickListener{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -41,6 +43,9 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
     private OnFragmentInteractionListener mListener;
 
     private Button addTaskButton;
+    private Button deleteAllTasksButton;
+
+    private Callbacks mCallbacks = itemSelectedCallback;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -48,9 +53,15 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
      */
     private ListAdapter mAdapter;
 
+    private static Callbacks itemSelectedCallback = new Callbacks() {
+        @Override
+        public void onListItemSelected(int id) {
+        }
+    };
+
     // TODO: Rename and change types of parameters
-    public static TaskListFragment newInstance(String param1, String param2) {
-        TaskListFragment fragment = new TaskListFragment();
+    public static ListTaskListFragment newInstance(String param1, String param2) {
+        ListTaskListFragment fragment = new ListTaskListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -62,7 +73,7 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public TaskListFragment() {
+    public ListTaskListFragment() {
     }
 
     @Override
@@ -84,7 +95,7 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
 
         Log.e("Total Tasks", Integer.toString(taskLists.size()));
 
-        setListAdapter(new TaskListAdapter(getActivity(), taskLists));
+        setListAdapter(new ListTaskListAdapter(getActivity(), taskLists));
 
     }
 
@@ -96,8 +107,22 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
         addTaskButton = (Button) view.findViewById(R.id.addButton);
         addTaskButton.setOnClickListener(this);
 
+        deleteAllTasksButton = (Button) view.findViewById(R.id.deleteTasksButton);
+        deleteAllTasksButton.setOnClickListener(this);
+
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Activity activity){
+        super.onAttach(activity);
+
+        if (!(activity instanceof Callbacks)) {
+            throw new IllegalStateException("Activity must implement fragment's callbacks.");
+        }
+
+        mCallbacks = (Callbacks) activity;
     }
 
     @Override
@@ -110,8 +135,8 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
     public void onResume(){
         super.onResume();
         refreshTaskLists();
-        TaskListAdapter taskListAdapter = (TaskListAdapter)getListAdapter();
-        taskListAdapter.updateDataset(this.taskLists);
+        ListTaskListAdapter listTaskListAdapter = (ListTaskListAdapter)getListAdapter();
+        listTaskListAdapter.updateDataset(this.taskLists);
 
     }
 
@@ -127,9 +152,21 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
+            case R.id.deleteTasksButton:
+                dbHelper.deleteAllTasks();
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Deleted " + dbHelper.deleteAllTasks() + " rows.", Toast.LENGTH_LONG).show();
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id){
+        super.onListItemClick(listView, view, position, id);
+        Intent detailIntent = new Intent(getActivity(), TaskListDetailsActivty.class);
+        detailIntent.putExtra("tasklist_id", taskLists.get(position).getId());
+        startActivity(detailIntent);
     }
 
 
@@ -147,5 +184,11 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
         // TODO: Update argument type and name
         public void onTaskListFragmentInteraction(String id);
     }
+
+    public static interface Callbacks {
+
+        public abstract void onListItemSelected(int id);
+    }
+
 
 }

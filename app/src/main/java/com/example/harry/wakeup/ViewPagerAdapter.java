@@ -29,7 +29,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return AlarmFragment.newInstance("1", "Alarms");
             case 2:
-                return TaskListFragment.newInstance("2", "Tasks");
+                return ListTaskListFragment.newInstance("2", "Tasks");
 
 
             default:

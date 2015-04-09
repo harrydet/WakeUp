@@ -193,7 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return task_id;
     }
 
-    public List<Task> getAllTags() {
+    public List<Task> getAllTasks() {
         List<Task> tags = new ArrayList<Task>();
         String selectQuery = "SELECT  * FROM " + TABLE_TASK;
 
@@ -216,7 +216,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return tags;
     }
 
-    public int updateTag(Task task) {
+    public List<Task> getTasksByTaskList(TaskList taskList){
+        List<Task> tasks = new ArrayList<Task>();
+
+        String selectQuery = "SELECT  o.* FROM " + TABLE_TASK_TASKLIST + " AS uo INNER JOIN "
+                + TABLE_TASK + " AS o ON uo." + KEY_TASK_ID + " = o."
+                + KEY_ID + " WHERE uo." + KEY_TASKLIST_ID + " = " +  taskList.getId();
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Task td = new Task();
+                td.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                td.setName((c.getString(c.getColumnIndex(KEY_TASK_NAME))));
+                td.setDescription(c.getString(c.getColumnIndex(KEY_TASK_DESCRIPTION)));
+
+                tasks.add(td);
+            } while (c.moveToNext());
+        }
+
+        return tasks;
+
+    }
+
+    public int updateTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -227,7 +255,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(task.getId()) });
     }
 
-    public void deleteTag(Task task, boolean should_delete_all_tag_todos) {
+    public void deleteTask(Task task, boolean should_delete_all_tag_todos) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // before deleting task
@@ -246,6 +274,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // now delete the task
         db.delete(TABLE_TASK, KEY_ID + " = ?",
                 new String[] { String.valueOf(task.getId()) });
+    }
+
+    public int deleteAllTasks(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_TASK_TASKLIST, "1", null);
+        return db.delete(TABLE_TASK, "1", null);
     }
 
     public long createTaskTaskList(long tasklist_id, long task_id) {

@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.AlarmManager;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class MainScreen extends FragmentActivity implements ActionBar.TabListener {
+public class MainScreen extends FragmentActivity implements ActionBar.TabListener, ListTaskListFragment.Callbacks {
 
     ActionBar actionbar;
     /**
@@ -59,6 +60,7 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
 
         viewPager.setCurrentItem(1);
 
+
     }
 
     @Override
@@ -79,4 +81,10 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     public AlarmManager getAlarmManager(){
         return alarmManager;
     }
+
+    @Override
+    public void onListItemSelected(int id){
+
+    }
+
 }

@@ -20,4 +20,6 @@
     <string name="new_task_title_hint">Title</string>
     <string name="new_task_subtitle_hint">Subtitle</string>
     <string name="new_task_task_hint">Task</string>
+    <string name="title_activity_task_list_details_activty">TaskListDetailsActivty</string>
+    <string name="delete_tasks_button_text">Delete All Tasks</string>
 </resources>

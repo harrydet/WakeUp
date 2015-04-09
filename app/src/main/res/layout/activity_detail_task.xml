@@ -1,0 +1,21 @@
+<LinearLayout
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/detail_parent_layout">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_list_title"
+        android:textSize="20pt"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_list_subtitle"
+        android:textSize="12pt"/>
+
+
+</LinearLayout>
