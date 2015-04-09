@@ -16,4 +16,8 @@
     <string name="title_activity_new_task_list">NewTaskListActivity</string>
     <string name="more_tasks_text">More tasks</string>
     <string name="submit_button_text">Submit</string>
+    <string name="delete_button_text">Delete</string>
+    <string name="new_task_title_hint">Title</string>
+    <string name="new_task_subtitle_hint">Subtitle</string>
+    <string name="new_task_task_hint">Task</string>
 </resources>

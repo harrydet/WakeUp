@@ -5,13 +5,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListAdapter;
 
+import com.example.harry.wakeup.helpers.DatabaseHelper;
+
 import java.net.URI;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -27,6 +31,9 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private DatabaseHelper dbHelper;
+    private List<TaskList> taskLists;
 
     private String mParam1;
     private String mParam2;
@@ -71,6 +78,14 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
         String jsonString = settings.getString("json_object", null/*default value*/);
 
+        dbHelper = new DatabaseHelper(getActivity().getApplicationContext());
+
+        taskLists = dbHelper.getAllTaskLists();
+
+        Log.e("Total Tasks", Integer.toString(taskLists.size()));
+
+        setListAdapter(new TaskListAdapter(getActivity(), taskLists));
+
     }
 
     @Override
@@ -89,6 +104,19 @@ public class TaskListFragment extends ListFragment implements View.OnClickListen
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        refreshTaskLists();
+        TaskListAdapter taskListAdapter = (TaskListAdapter)getListAdapter();
+        taskListAdapter.updateDataset(this.taskLists);
+
+    }
+
+    private void refreshTaskLists(){
+        this.taskLists = dbHelper.getAllTaskLists();
     }
 
     @Override

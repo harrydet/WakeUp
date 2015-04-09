@@ -1,7 +1,9 @@
 package com.example.harry.wakeup;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
     private Button submitButton;
     private EditText[] textFields;
     private EditText titleText;
+    private EditText subtitleText;
 
     private DatabaseHelper dbHelper;
 
@@ -33,6 +36,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         submitButton.setOnClickListener(this);
 
         titleText = (EditText) findViewById(R.id.titleText);
+        subtitleText = (EditText) findViewById(R.id.subtitleTextEdit);
 
         textFields = new EditText[TOTAL_EDIT_TEXT];
         textFields[0] = (EditText) findViewById(R.id.editText1);
@@ -52,6 +56,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
                 break;
             case R.id.submitButton:
                 saveListItem();
+                finish();
                 break;
             default:
                 break;
@@ -80,7 +85,8 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
 
         TaskList tl = new TaskList();
         tl.setListName(titleText.getText().toString());
-        tl.setListSubText("Sample Subtext");
+        tl.setListSubText(subtitleText.getText().toString());
+        Log.e("Subtext", subtitleText.getText().toString());
         dbHelper.createTaskList(tl, taskIds);
         dbHelper.closeDB();
     }
