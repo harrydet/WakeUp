@@ -3,7 +3,15 @@
     android:layout_width="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:id="@+id/detail_parent_layout">
+    android:id="@+id/detail_parent_layout"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="0.88"
+        android:id="@+id/inner_detail_layout">
 
     <TextView
         android:layout_width="fill_parent"
@@ -16,6 +24,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/task_list_subtitle"
         android:textSize="12pt"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.12"
+        android:id="@+id/modifyButton"
+        android:text="Modify"/>
 
 
 </LinearLayout>

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.harry.wakeup.helpers.DatabaseHelper;
@@ -28,7 +29,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ListTaskListFragment extends ListFragment implements View.OnClickListener{
+public class ListTaskListFragment extends ListFragment implements View.OnClickListener, ListTaskListAdapter.AdapterCallback{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,13 +38,17 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
     private DatabaseHelper dbHelper;
     private List<TaskList> taskLists;
 
+    private ListTaskListAdapter adapter;
+
+    private TextView emptyTasklistList;
+
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
     private Button addTaskButton;
-    private Button deleteAllTasksButton;
+/*    private Button deleteAllTasksButton;*/
 
     private Callbacks mCallbacks = itemSelectedCallback;
 
@@ -95,7 +100,8 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
 
         Log.e("Total Tasks", Integer.toString(taskLists.size()));
 
-        setListAdapter(new ListTaskListAdapter(getActivity(), taskLists));
+        this.adapter = new ListTaskListAdapter(getActivity(), taskLists, this);
+        setListAdapter(adapter);
 
     }
 
@@ -107,8 +113,15 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
         addTaskButton = (Button) view.findViewById(R.id.addButton);
         addTaskButton.setOnClickListener(this);
 
-        deleteAllTasksButton = (Button) view.findViewById(R.id.deleteTasksButton);
-        deleteAllTasksButton.setOnClickListener(this);
+/*        deleteAllTasksButton = (Button) view.findViewById(R.id.deleteTasksButton);
+        deleteAllTasksButton.setOnClickListener(this);*/
+
+        emptyTasklistList = (TextView) view.findViewById(R.id.empty_tasklist_list);
+        if(taskLists.size() == 0){
+            emptyTasklistList.setVisibility(View.VISIBLE);
+        } else {
+            emptyTasklistList.setVisibility(View.GONE);
+        }
 
 
         return view;
@@ -138,6 +151,12 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
         ListTaskListAdapter listTaskListAdapter = (ListTaskListAdapter)getListAdapter();
         listTaskListAdapter.updateDataset(this.taskLists);
 
+        if(taskLists.size() == 0){
+            emptyTasklistList.setVisibility(View.VISIBLE);
+        } else {
+            emptyTasklistList.setVisibility(View.GONE);
+        }
+
     }
 
     private void refreshTaskLists(){
@@ -152,10 +171,10 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-            case R.id.deleteTasksButton:
+            /*case R.id.deleteTasksButton:
                 dbHelper.deleteAllTasks();
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Deleted " + dbHelper.deleteAllTasks() + " rows.", Toast.LENGTH_LONG).show();
+                        "Deleted " + dbHelper.deleteAllTasks() + " rows.", Toast.LENGTH_LONG).show();*/
             default:
                 break;
         }
@@ -188,6 +207,15 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
     public static interface Callbacks {
 
         public abstract void onListItemSelected(int id);
+    }
+
+    @Override
+    public void onMethodCallback() {
+        if(taskLists.size() == 0){
+            emptyTasklistList.setVisibility(View.VISIBLE);
+        } else {
+            emptyTasklistList.setVisibility(View.GONE);
+        }
     }
 
 

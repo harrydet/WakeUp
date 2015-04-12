@@ -3,26 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.harry.wakeup.ListTaskListFragment"
     android:orientation="vertical"
-    android:weightSum="2">
+    android:weightSum="2"
+    tools:context="com.example.harry.wakeup.ListTaskListFragment">
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.4"/>
+        android:layout_weight="1.7"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/empty_tasklist_list"
+            android:layout_width="fill_parent"
+            android:layout_height="180dp"
+            android:gravity="center"
+            android:text="@string/empty_tasklist_list"
+            android:textColor="#808080"
+            android:visibility="visible" />
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/addButton"
-        android:text="@string/button_text"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"/>
-    <Button
-        android:id="@+id/deleteTasksButton"
-        android:text="@string/delete_tasks_button_text"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"/>
+        android:layout_weight="0.3"
+        android:text="@string/button_text" />
+    <!--<Button-->
+    <!--android:id="@+id/deleteTasksButton"-->
+    <!--android:text="@string/delete_tasks_button_text"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="0.3"/>-->
 </LinearLayout>

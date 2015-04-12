@@ -43,8 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " TEXT" + ")";
 
     private static final String CREATE_TABLE_TASK_TASKLIST = "CREATE TABLE "
-            + TABLE_TASK_TASKLIST + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
-            + KEY_TASK_ID + " INTEGER," + KEY_TASKLIST_ID + " INTEGER"+ ")";
+            + TABLE_TASK_TASKLIST + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
+            +  KEY_TASK_ID + " INTEGER REFERENCES task(id) ON DELETE CASCADE ON UPDATE CASCADE, " + KEY_TASKLIST_ID + " INTEGER REFERENCES tasklist(id) ON DELETE CASCADE ON UPDATE CASCADE"+ ")";
 
 
     public DatabaseHelper(Context context) {
@@ -56,6 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TASK);
         db.execSQL(CREATE_TABLE_TASKLIST);
         db.execSQL(CREATE_TABLE_TASK_TASKLIST);
+        db.execSQL("PRAGMA foreign_keys = ON");
     }
 
     @Override
@@ -66,6 +67,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // create new tables
         onCreate(db);
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db){
+        super.onOpen(db);
+        Log.e("Executed: ", "PRAGMA");
+        db.execSQL("PRAGMA foreign_keys = ON");
     }
 
     public long createTaskList(TaskList taskList, long[] task_ids) {
@@ -174,8 +182,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(taskList.getId()) });
     }
 
-    public void deleteTaskList(long tasklist_id) {
+    public void deleteTaskList(long tasklist_id, boolean should_delete_all_tasks) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        if(should_delete_all_tasks){
+            List<Task> allTasks = getTasksByTaskList(getTaskList(tasklist_id));
+
+            // delete all tasklists
+            for (Task task : allTasks) {
+                // delete tasklist
+                deleteTask(task);
+            }
+        }
+
         db.delete(TABLE_TASKLIST, KEY_ID + " = ?",
                 new String[] { String.valueOf(tasklist_id) });
     }
@@ -255,21 +274,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(task.getId()) });
     }
 
-    public void deleteTask(Task task, boolean should_delete_all_tag_todos) {
+    public void deleteTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        // before deleting task
-        // check if todos under this task should also be deleted
-        if (should_delete_all_tag_todos) {
-            // get all todos under this task
-            List<TaskList> allTaskTaskLists = getAllTaskListsByTask(task.getName());
-
-            // delete all tasklists
-            for (TaskList taskList : allTaskTaskLists) {
-                // delete tasklist
-                deleteTaskList(taskList.getId());
-            }
-        }
 
         // now delete the task
         db.delete(TABLE_TASK, KEY_ID + " = ?",

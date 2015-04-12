@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
@@ -55,8 +56,12 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
                 showNextEditText();
                 break;
             case R.id.submitButton:
-                saveListItem();
-                finish();
+                if(fieldsValid()) {
+                    saveListItem();
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Some of the input fields are empty", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 break;
@@ -89,5 +94,20 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         Log.e("Subtext", subtitleText.getText().toString());
         dbHelper.createTaskList(tl, taskIds);
         dbHelper.closeDB();
+    }
+
+    private boolean fieldsValid(){
+        boolean valid = true;
+        if (!titleText.getText().toString().isEmpty() && !subtitleText.getText().toString().isEmpty()
+                && titleText.getText().toString().matches(".*\\w.*") && subtitleText.getText().toString().matches(".*\\w.*")){
+            for(int i = 0; i < TOTAL_VISIBLE; i++){
+                if(textFields[i].getText().toString().isEmpty() || !textFields[i].getText().toString().matches(".*\\w.*")){
+                    valid = false;
+                }
+            }
+        } else {
+            valid = false;
+        }
+        return valid;
     }
 }

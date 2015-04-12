@@ -2,6 +2,8 @@ package com.example.harry.wakeup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +26,21 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
     private LayoutInflater mInflater;
     private DatabaseHelper dbHelper;
 
-    public ListTaskListAdapter(Activity activity, List<TaskList> taskLists) {
+    private AdapterCallback mAdapterCallback;
+
+    public ListTaskListAdapter(Activity activity, List<TaskList> taskLists, Fragment fragment) {
         super();
         this.activity = activity;
         this.taskLists = taskLists;
         this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         this.dbHelper = new DatabaseHelper(this.activity.getApplicationContext());
+
+        try {
+            this.mAdapterCallback = ((AdapterCallback) fragment);
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Fragment must implement AdapterCallback.");
+        }
     }
 
     @Override
@@ -79,13 +89,20 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
     }
 
     private void deleteItem(int position){
-        dbHelper.deleteTaskList(taskLists.get(position).getId());
+        dbHelper.deleteTaskList(taskLists.get(position).getId(), true);
         taskLists.remove(position);
         notifyDataSetChanged();
+        if(taskLists.size() == 0){
+            mAdapterCallback.onMethodCallback();
+        }
     }
 
     public void updateDataset(List<TaskList> taskLists){
         this.taskLists = taskLists;
         notifyDataSetChanged();
+    }
+
+    public static interface AdapterCallback {
+        void onMethodCallback();
     }
 }
