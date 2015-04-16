@@ -11,16 +11,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
+import com.example.harry.wakeup.adapters.AlarmListAdapter;
+import com.example.harry.wakeup.helpers.DatabaseHelper;
+import com.software.shell.fab.ActionButton;
+
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -31,7 +38,7 @@ import java.util.Calendar;
  * Use the {@link AlarmFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AlarmFragment extends Fragment implements View.OnClickListener {
+public class AlarmFragment extends ListFragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,13 +49,13 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private DatabaseHelper dbHelper;
 
-    AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
-    private TimePicker alarmTimePicker;
-    private static AlarmActivity inst;
-    private TextView alarmTextView;
-    private Ringtone ringtone;
+    private ActionButton fab;
+
+    private List<Alarm> alarmsList;
+
+    private ListAdapter mAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -80,6 +87,13 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        dbHelper = new DatabaseHelper(getActivity().getApplicationContext());
+
+        alarmsList = dbHelper.getAllAlarms();
+
+        this.mAdapter = new AlarmListAdapter(getActivity(), alarmsList);
+        setListAdapter(mAdapter);
+
     }
 
     @Override
@@ -87,21 +101,8 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_alarm, container, false);
-        alarmTimePicker = (TimePicker) rootView.findViewById(R.id.alarmTimePicker);
-        alarmTextView = (TextView) rootView.findViewById(R.id.alarmText);
-        ToggleButton alarmToggle = (ToggleButton) rootView.findViewById(R.id.alarmToggle);
-        alarmToggle.setOnClickListener(this);
-        Button silence = (Button) rootView.findViewById(R.id.silence_button);
-        silence.setOnClickListener(this);
-
-        SharedPreferences settings = PreferenceManager
-                .getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String alarmTextString = settings.getString("alarm_text", null/*default value*/);
-        if(alarmTextString != null){
-            alarmTextView.setText(alarmTextString);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.remove("alarm_text");
-        }
+        fab = (ActionButton) rootView.findViewById(R.id.fab_activity_action_button);
+        fab.setOnClickListener(this);
 
         return rootView;
     }
@@ -114,35 +115,16 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.silence_button:
-                Intent stopIntent = new Intent(getActivity(), RingtonePlayingService.class);
-                getActivity().stopService(stopIntent);
+        switch (v.getId()) {
+            case R.id.fab_activity_action_button:
+                Intent intent = new Intent(getActivity(), NewAlarmActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            default:
                 break;
-            case R.id.alarmToggle:
-                if (((ToggleButton) v).isChecked()) {
-                    Log.d("AlarmActivity", "Alarm On");
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-                    calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-                    Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                    pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, myIntent, 0);
-                    MainScreen mainActivity = (MainScreen) getActivity();
-                    mainActivity.getAlarmManager().set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-                } else {
-                    MainScreen mainActivity = (MainScreen) getActivity();
-                    mainActivity.getAlarmManager().cancel(pendingIntent);
-                    setAlarmText("");
-                    Log.d("MyActivity", "Alarm Off");
-                }
         }
     }
 
-
-
-    public void setAlarmText(String alarmText) {
-        alarmTextView.setText(alarmText);
-    }
 
     /**
      * This interface must be implemented by activities that contain this

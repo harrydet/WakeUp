@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.harry.wakeup.Alarm;
 import com.example.harry.wakeup.Task;
 import com.example.harry.wakeup.TaskList;
 
@@ -21,6 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_TASK = "task";
     private static final String TABLE_TASKLIST = "tasklist";
     private static final String TABLE_TASK_TASKLIST = "task_tasklist";
+    private static final String TABLE_ALARM = "alarm";
+    private static final String TABLE_ALARM_TASKLIST = "alarm_tasklist";
 
     private static final String KEY_ID = "id";
 
@@ -32,7 +35,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String KEY_TASK_ID = "task_id";
     private static final String KEY_TASKLIST_ID = "tasklist_id";
+    private static final String KEY_ALARM_ID = "alarm_id";
 
+    private static final String KEY_ALARM_DATE = "date";
+    private static final String KEY_ALARM_STATUS = "satus";
+
+
+    //Tasklist tables
     private static final String CREATE_TABLE_TASK = "CREATE TABLE "
             + TABLE_TASK + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_TASK_NAME
             + " TEXT,"  + KEY_TASK_DESCRIPTION
@@ -46,6 +55,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_TASK_TASKLIST + "(" + KEY_ID + " INTEGER PRIMARY KEY, "
             +  KEY_TASK_ID + " INTEGER REFERENCES task(id) ON DELETE CASCADE ON UPDATE CASCADE, " + KEY_TASKLIST_ID + " INTEGER REFERENCES tasklist(id) ON DELETE CASCADE ON UPDATE CASCADE"+ ")";
 
+    //Alarm tables
+    private static final String CREATE_TABLE_ALARM = "CREATE TABLE "
+            + TABLE_ALARM + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_ALARM_DATE
+            + " INT,"  + KEY_ALARM_STATUS
+            + " INT" + ")";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -56,6 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_TASK);
         db.execSQL(CREATE_TABLE_TASKLIST);
         db.execSQL(CREATE_TABLE_TASK_TASKLIST);
+        db.execSQL(CREATE_TABLE_ALARM);
         db.execSQL("PRAGMA foreign_keys = ON");
     }
 
@@ -93,6 +108,76 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return tasklist_id;
     }
+
+    public long createAlarm(Alarm alarm){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        if(alarm.getStatus()){
+            values.put(KEY_ALARM_STATUS, 1);
+        } else {
+            values.put(KEY_ALARM_STATUS, 0);
+        }
+        values.put(KEY_ALARM_DATE, alarm.getTime());
+
+        long alarm_id = db.insert(TABLE_ALARM, null, values);
+        return alarm_id;
+    }
+
+    public Alarm getAlarm(long alarm_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_ALARM + " WHERE "
+                + KEY_ID + " = " + alarm_id;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Alarm al = new Alarm();
+        al.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        int status = c.getInt(c.getColumnIndex(KEY_ALARM_STATUS));
+        if(status == 0){
+            al.setStatus(false);
+        } else {
+            al.setStatus(true);
+        }
+        al.setTime(c.getInt(c.getColumnIndex(KEY_ALARM_DATE)));
+
+        return al;
+    }
+
+    public List<Alarm> getAllAlarms(){
+        List<Alarm> alarms = new ArrayList<Alarm>();
+        String selectQuery = "SELECT  * FROM " + TABLE_ALARM;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Alarm al = new Alarm();
+                al.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+                int status = c.getInt(c.getColumnIndex(KEY_ALARM_STATUS));
+                if(status == 0){
+                    al.setStatus(false);
+                } else {
+                    al.setStatus(true);
+                }
+                al.setTime(c.getInt(c.getColumnIndex(KEY_ALARM_DATE)));
+
+                // adding to todo list
+                alarms.add(al);
+            } while (c.moveToNext());
+        }
+
+        return alarms;
+    }
+
 
     public TaskList getTaskList(long tasklist_id) {
         SQLiteDatabase db = this.getReadableDatabase();

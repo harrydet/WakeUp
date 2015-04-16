@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.harry.wakeup.adapters.ListTaskListAdapter;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import java.util.List;
@@ -92,7 +92,6 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
 
         SharedPreferences settings = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String jsonString = settings.getString("json_object", null/*default value*/);
 
         dbHelper = new DatabaseHelper(getActivity().getApplicationContext());
 

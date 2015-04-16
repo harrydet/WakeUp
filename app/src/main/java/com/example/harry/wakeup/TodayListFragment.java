@@ -1,15 +1,26 @@
 package com.example.harry.wakeup;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.ToggleButton;
+
+import java.util.Calendar;
 
 
 /**
@@ -20,7 +31,7 @@ import android.view.ViewGroup;
  * Use the {@link TodayListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayListFragment extends ListFragment {
+public class TodayListFragment extends ListFragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,6 +40,13 @@ public class TodayListFragment extends ListFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private TimePicker alarmTimePicker;
+    private static AlarmActivity inst;
+    private TextView alarmTextView;
+    private Ringtone ringtone;
 
     private OnFragmentInteractionListener mListener;
 
@@ -73,7 +91,22 @@ public class TodayListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_today_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_today_list, container, false);
+
+        alarmTextView = (TextView) rootView.findViewById(R.id.alarmText);
+        Button silence = (Button) rootView.findViewById(R.id.silence_button);
+        silence.setOnClickListener(this);
+
+        SharedPreferences settings = PreferenceManager
+                .getDefaultSharedPreferences(getActivity().getApplicationContext());
+        String alarmTextString = settings.getString("alarm_text", null/*default value*/);
+        if(alarmTextString != null){
+            alarmTextView.setText(alarmTextString);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove("alarm_text");
+        }
+
+        return rootView;
     }
 
     @Override
@@ -95,6 +128,20 @@ public class TodayListFragment extends ListFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onTodayListFragmentInteraction(String id);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.silence_button:
+                Intent stopIntent = new Intent(getActivity(), RingtonePlayingService.class);
+                getActivity().stopService(stopIntent);
+                break;
+        }
+    }
+
+    public void setAlarmText(String alarmText) {
+        alarmTextView.setText(alarmText);
     }
 
 }

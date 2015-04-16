@@ -1,9 +1,13 @@
-package com.example.harry.wakeup;
+package com.example.harry.wakeup.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.harry.wakeup.AlarmFragment;
+import com.example.harry.wakeup.ListTaskListFragment;
+import com.example.harry.wakeup.TodayListFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

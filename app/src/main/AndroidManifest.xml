@@ -38,6 +38,10 @@
             android:name=".TaskListDetailsActivty"
             android:label="@string/title_activity_task_list_details_activty" >
         </activity>
+        <activity
+            android:name=".NewAlarmActivity"
+            android:label="@string/title_activity_new_alarm" >
+        </activity>
     </application>
 
 </manifest>

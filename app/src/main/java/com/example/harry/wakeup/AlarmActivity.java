@@ -21,6 +21,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
+import com.software.shell.fab.ActionButton;
+import com.software.shell.fab.FloatingActionButton;
+
 import java.util.Calendar;
 
 
@@ -28,10 +31,10 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
 
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-    private TimePicker alarmTimePicker;
     private static AlarmActivity inst;
     private TextView alarmTextView;
     private Ringtone ringtone;
+    private ActionButton fab;
 
     public static AlarmActivity instance() {
 
@@ -53,33 +56,15 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
         alarmTextView = (TextView) findViewById(R.id.alarmText);
-        ToggleButton alarmToggle = (ToggleButton) findViewById(R.id.alarmToggle);
-        alarmToggle.setOnClickListener(this);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Button silence = (Button) findViewById(R.id.silence_button);
         silence.setOnClickListener(this);
 
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             setAlarmText(extras.getString("msg"));
-        }
-    }
-
-    public void onToggleClicked(View view) {
-        if (((ToggleButton) view).isChecked()) {
-            Log.d("AlarmActivity", "Alarm On");
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-            calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-            Intent myIntent = new Intent(AlarmActivity.this, AlarmReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, myIntent, 0);
-            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-        } else {
-            alarmManager.cancel(pendingIntent);
-            setAlarmText("");
-            Log.d("MyActivity", "Alarm Off");
         }
     }
 
@@ -102,4 +87,5 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
 }

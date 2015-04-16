@@ -1,21 +1,13 @@
 package com.example.harry.wakeup;
 
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.AlarmManager;
-import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.example.harry.wakeup.adapters.ViewPagerAdapter;
 
 
 public class MainScreen extends FragmentActivity implements ActionBar.TabListener, ListTaskListFragment.Callbacks {

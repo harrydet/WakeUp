@@ -1,4 +1,4 @@
-package com.example.harry.wakeup;
+package com.example.harry.wakeup.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.harry.wakeup.R;
+import com.example.harry.wakeup.TaskList;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import java.util.List;
