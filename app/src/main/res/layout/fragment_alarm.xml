@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/empty_alarm_list"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:gravity="center"
+        android:text="@string/empty_alarms_list"
+        android:textColor="#808080"
+        android:visibility="visible" />
+
     <ListView
         android:id="@android:id/list"
         style="@style/fab_layout_match_width_match_height_style"

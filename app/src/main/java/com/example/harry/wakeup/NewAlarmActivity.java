@@ -45,24 +45,25 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.setButton:
-                createRecord();
+                long id = createRecord(pendingIntent);
                 Log.d("AlarmActivity", "Alarm On");
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
                 calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
                 Intent myIntent = new Intent(NewAlarmActivity.this, AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, 0, myIntent, 0);
+                pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, (int) id, myIntent, 0);
                 alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+                finish();
         }
     }
 
-    public void createRecord(){
+    public long createRecord(PendingIntent pendingIntent){
         int hour = alarmTimePicker.getCurrentHour();
         int minute = alarmTimePicker.getCurrentMinute();
         int combined = hour*100 + minute;
         Alarm alarm = new Alarm();
         alarm.setStatus(true);
         alarm.setTime(combined);
-        dbHelper.createAlarm(alarm);
+        return dbHelper.createAlarm(alarm);
     }
 }

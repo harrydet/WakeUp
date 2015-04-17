@@ -25,4 +25,6 @@
     <string name="empty_tasklist_list">Your task list is empty :( \nAdd some</string>
     <string name="title_activity_new_alarm">NewAlarmActivity</string>
     <string name="set_button_text">Set</string>
+    <string name="alarm_list_button_delete">Delete</string>
+    <string name="empty_alarms_list">No alarms created yet.\nTap the + button to create one now!</string>
 </resources>

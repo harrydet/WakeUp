@@ -1,44 +1,24 @@
 package com.example.harry.wakeup;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.net.Uri;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.ToggleButton;
 
 import com.example.harry.wakeup.adapters.AlarmListAdapter;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 import com.software.shell.fab.ActionButton;
 
-import java.util.Calendar;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AlarmFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AlarmFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class AlarmFragment extends ListFragment implements View.OnClickListener {
+public class AlarmFragment extends ListFragment implements View.OnClickListener, AlarmListAdapter.AdapterCallback{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -56,6 +36,8 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener 
     private List<Alarm> alarmsList;
 
     private ListAdapter mAdapter;
+
+    private TextView emptyListText;
 
     /**
      * Use this factory method to create a new instance of
@@ -91,7 +73,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener 
 
         alarmsList = dbHelper.getAllAlarms();
 
-        this.mAdapter = new AlarmListAdapter(getActivity(), alarmsList);
+        this.mAdapter = new AlarmListAdapter(getActivity(), alarmsList, this);
         setListAdapter(mAdapter);
 
     }
@@ -104,6 +86,13 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener 
         fab = (ActionButton) rootView.findViewById(R.id.fab_activity_action_button);
         fab.setOnClickListener(this);
 
+        emptyListText = (TextView) rootView.findViewById(R.id.empty_alarm_list);
+        if(alarmsList.size() == 0){
+            emptyListText.setVisibility(View.VISIBLE);
+        } else {
+            emptyListText.setVisibility(View.GONE);
+        }
+
         return rootView;
     }
 
@@ -111,6 +100,25 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener 
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        this.alarmsList = dbHelper.getAllAlarms();
+        ((AlarmListAdapter) this.mAdapter).updateDataset(this.alarmsList);
+        if(this.alarmsList.size() == 0){
+            emptyListText.setVisibility(View.VISIBLE);
+        } else {
+            emptyListText.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        getListView().setDivider(new ColorDrawable(Color.BLUE));
+        getListView().setDividerHeight(1);
     }
 
     @Override
@@ -122,6 +130,15 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener 
                 startActivity(intent);
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onMethodCallback() {
+        if(alarmsList.size() == 0){
+            emptyListText.setVisibility(View.VISIBLE);
+        } else {
+            emptyListText.setVisibility(View.GONE);
         }
     }
 

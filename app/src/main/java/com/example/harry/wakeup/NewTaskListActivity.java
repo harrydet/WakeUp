@@ -101,7 +101,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         if (!titleText.getText().toString().isEmpty() && !subtitleText.getText().toString().isEmpty()
                 && titleText.getText().toString().matches(".*\\w.*") && subtitleText.getText().toString().matches(".*\\w.*")){
             for(int i = 0; i < TOTAL_VISIBLE; i++){
-                if(textFields[i].getText().toString().isEmpty() || !textFields[i].getText().toString().matches(".*\\w.*")){
+                if(textFields[i].getText().toString().isEmpty() &&  !textFields[i].getText().toString().matches(".*\\w.*")){
                     valid = false;
                 }
             }

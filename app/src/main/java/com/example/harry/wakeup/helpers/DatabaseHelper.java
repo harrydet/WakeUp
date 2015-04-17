@@ -58,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Alarm tables
     private static final String CREATE_TABLE_ALARM = "CREATE TABLE "
             + TABLE_ALARM + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_ALARM_DATE
-            + " INT,"  + KEY_ALARM_STATUS
+            + " INT UNIQUE,"  + KEY_ALARM_STATUS
             + " INT" + ")";
 
     public DatabaseHelper(Context context) {
@@ -124,6 +124,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return alarm_id;
     }
 
+    public int updateAlarm(Alarm alarm) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ALARM_DATE, alarm.getTime());
+        if(alarm.getStatus()){
+            values.put(KEY_ALARM_STATUS, 1);
+        } else {
+            values.put(KEY_ALARM_STATUS, 0);
+        }
+
+
+        // updating row
+        return db.update(TABLE_ALARM, values, KEY_ID + " = ?",
+                new String[] { String.valueOf(alarm.getId()) });
+    }
+
     public Alarm getAlarm(long alarm_id){
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -146,6 +163,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         al.setTime(c.getInt(c.getColumnIndex(KEY_ALARM_DATE)));
 
         return al;
+    }
+
+    public void deleteAlarm(long alarm_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_ALARM, KEY_ID + " = ?",
+                new String[] { String.valueOf(alarm_id) });
     }
 
     public List<Alarm> getAllAlarms(){
