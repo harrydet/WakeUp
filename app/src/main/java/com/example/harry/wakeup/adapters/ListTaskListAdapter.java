@@ -2,6 +2,7 @@ package com.example.harry.wakeup.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -71,6 +72,7 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
 
         TextView subText = (TextView) convertView.findViewById(R.id.list_item_subtitle);
         subText.setText(taskLists.get(position).getListSubText());
+        subText.setTextColor(Color.GRAY);
 
         Button deleteButton = (Button) convertView.findViewById(R.id.delete_button);
         deleteButton.setTag(position);

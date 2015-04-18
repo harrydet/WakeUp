@@ -9,6 +9,16 @@ public class Alarm {
     private int id;
     private boolean status;
     private int time;
+    private TaskList taskList;
+
+    public TaskList getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(TaskList taskList) {
+        this.taskList = taskList;
+    }
+
     private PendingIntent pendingIntent;
 
     public PendingIntent getPendingIntent() {

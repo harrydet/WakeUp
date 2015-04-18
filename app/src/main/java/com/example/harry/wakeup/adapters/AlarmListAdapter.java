@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import com.example.harry.wakeup.AlarmReceiver;
 import com.example.harry.wakeup.R;
 import com.example.harry.wakeup.RingtonePlayingService;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Harry on 13/03/2015.
@@ -81,8 +84,18 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
         TextView time =  (TextView)V.findViewById(R.id.time_text);
         int hour = alarms.get(position).getTime()/100;
         int minute = alarms.get(position).getTime()%100;
+        time.setTextColor(Color.BLACK);
 
-        time.setText(hour + ":" + minute);
+        if(hour < 10){
+            time.setText("0" + hour + ":" + minute);
+        } else if(minute < 10){
+            time.setText(hour + ":0" + minute);
+        } else {
+            time.setText(hour + ":" + minute);
+        }
+
+        TextView alarmSubText = (TextView)V.findViewById(R.id.time_sub_text);
+        alarmSubText.setText(alarms.get(position).getTaskList().getListName());
 
         alarmToggle = (ToggleButton) V.findViewById(R.id.alarm_status_button);
         alarmToggle.setChecked(alarms.get(position).getStatus());

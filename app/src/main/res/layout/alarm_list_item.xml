@@ -7,13 +7,19 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="fill_parent"
-        android:layout_weight="0.7">
+        android:layout_weight="0.7"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/time_text"
             android:textSize="20pt"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_sub_text"
+            android:textSize="14pt"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="0dp"

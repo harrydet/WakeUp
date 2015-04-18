@@ -8,16 +8,25 @@ import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import java.util.Calendar;
+import java.util.List;
+
+import me.drakeet.materialdialog.MaterialDialog;
 
 
 public class NewAlarmActivity extends ActionBarActivity implements View.OnClickListener{
@@ -27,6 +36,7 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
     private TimePicker alarmTimePicker;
     private Button setButton;
     private DatabaseHelper dbHelper;
+    private Button taskListButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,10 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
         setButton = (Button) findViewById(R.id.setButton);
         setButton.setOnClickListener(this);
 
+        taskListButton = (Button) findViewById(R.id.taskListButton);
+        taskListButton.setOnClickListener(this);
+        taskListButton.setTag(-1);
+
         dbHelper = new DatabaseHelper(this);
     }
 
@@ -46,14 +60,44 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
         switch (v.getId()){
             case R.id.setButton:
                 long id = createRecord(pendingIntent);
-                Log.d("AlarmActivity", "Alarm On");
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-                calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-                Intent myIntent = new Intent(NewAlarmActivity.this, AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, (int) id, myIntent, 0);
-                alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
-                finish();
+                if(id == -1) {
+                    Toast.makeText(getApplicationContext(), "Need to select a tasklist...", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("AlarmActivity", "Alarm On");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+                    calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+                    Intent myIntent = new Intent(NewAlarmActivity.this, AlarmReceiver.class);
+                    pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, (int) id, myIntent, 0);
+                    alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+                    finish();
+                }
+                break;
+            case R.id.taskListButton:
+                final MaterialDialog materialDialog = new MaterialDialog(this);
+                materialDialog.setTitle("Pick a list of tasks");
+
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+                final List<TaskList> taskLists = dbHelper.getAllTaskLists();
+                for(int i = 0; i < taskLists.size(); i++){
+                    arrayAdapter.add(taskLists.get(i).getListName());
+                }
+
+                View baseView = LayoutInflater.from(this).inflate(R.layout.tasklist_listview, null);
+                ListView listView = (ListView) baseView.findViewById(R.id.dialog_list_view);
+
+                listView.setAdapter(arrayAdapter);
+                listView.setDividerHeight(0);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        taskListButton.setTag(taskLists.get(position).getId());
+                        taskListButton.setText(taskLists.get(position).getListName());
+                        materialDialog.dismiss();
+                    }
+                });
+                materialDialog.setContentView(baseView);
+                materialDialog.show();
         }
     }
 
@@ -64,6 +108,12 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
         Alarm alarm = new Alarm();
         alarm.setStatus(true);
         alarm.setTime(combined);
-        return dbHelper.createAlarm(alarm);
+        if(taskListButton.getTag() == -1){
+            return -1;
+        } else {
+            alarm.setTaskList(dbHelper.getTaskList((int)taskListButton.getTag()));
+            return dbHelper.createAlarm(alarm);
+        }
+
     }
 }

@@ -36,6 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_TASK_ID = "task_id";
     private static final String KEY_TASKLIST_ID = "tasklist_id";
     private static final String KEY_ALARM_ID = "alarm_id";
+    private static final String KEY_ALARM_TASKLIST = "alarm_tasklist";
 
     private static final String KEY_ALARM_DATE = "date";
     private static final String KEY_ALARM_STATUS = "satus";
@@ -58,7 +59,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Alarm tables
     private static final String CREATE_TABLE_ALARM = "CREATE TABLE "
             + TABLE_ALARM + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_ALARM_DATE
-            + " INT UNIQUE,"  + KEY_ALARM_STATUS
+            + " INT UNIQUE,"  + KEY_ALARM_TASKLIST
+            + " INT,"  + KEY_ALARM_STATUS
             + " INT" + ")";
 
     public DatabaseHelper(Context context) {
@@ -119,6 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(KEY_ALARM_STATUS, 0);
         }
         values.put(KEY_ALARM_DATE, alarm.getTime());
+        values.put(KEY_ALARM_TASKLIST, alarm.getTaskList().getId());
 
         long alarm_id = db.insert(TABLE_ALARM, null, values);
         return alarm_id;
@@ -161,6 +164,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             al.setStatus(true);
         }
         al.setTime(c.getInt(c.getColumnIndex(KEY_ALARM_DATE)));
+        al.setTaskList(getTaskList(c.getInt(c.getColumnIndex(KEY_ALARM_TASKLIST))));
 
         return al;
     }
@@ -193,6 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     al.setStatus(true);
                 }
                 al.setTime(c.getInt(c.getColumnIndex(KEY_ALARM_DATE)));
+                al.setTaskList(getTaskList(c.getInt(c.getColumnIndex(KEY_ALARM_TASKLIST))));
 
                 // adding to todo list
                 alarms.add(al);
