@@ -137,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             values.put(KEY_ALARM_STATUS, 0);
         }
+        values.put(KEY_ALARM_TASKLIST, alarm.getTaskList().getId());
 
 
         // updating row

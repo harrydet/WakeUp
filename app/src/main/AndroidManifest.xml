@@ -42,6 +42,10 @@
             android:name=".NewAlarmActivity"
             android:label="@string/title_activity_new_alarm" >
         </activity>
+        <activity
+            android:name=".AlarmDetailsActivity"
+            android:label="@string/title_activity_alarm_details" >
+        </activity>
     </application>
 
 </manifest>

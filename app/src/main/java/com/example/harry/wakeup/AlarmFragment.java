@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.harry.wakeup.adapters.AlarmListAdapter;
@@ -140,6 +141,15 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
         } else {
             emptyListText.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id){
+        super.onListItemClick(listView, view, position, id);
+
+        Intent detailIntent = new Intent(getActivity(), AlarmDetailsActivity.class);
+        detailIntent.putExtra("alarm_id", alarmsList.get(position).getId());
+        startActivity(detailIntent);
     }
 
 

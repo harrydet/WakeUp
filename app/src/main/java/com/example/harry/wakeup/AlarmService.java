@@ -6,9 +6,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 /**
  * Created by Harry on 3/4/2015.
@@ -39,10 +41,11 @@ public class AlarmService extends IntentService {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder alarmNotificationBuilder = new NotificationCompat.Builder(
-                this).setContentTitle("Alarm").setSmallIcon(R.drawable.ic_alarm_clock).setContentText(msg);
+                this).setContentTitle("Alarm").setSmallIcon(R.drawable.ic_alarm_clock).setContentText(msg).setAutoCancel(true);
 
         alarmNotificationBuilder.setContentIntent(contentIntent);
         alarmNotificationManager.notify(1, alarmNotificationBuilder.build());
         Log.d("AlarmService", "Notification Sent");
     }
+
 }

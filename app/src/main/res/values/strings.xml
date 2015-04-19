@@ -28,4 +28,6 @@
     <string name="alarm_list_button_delete">Delete</string>
     <string name="empty_alarms_list">No alarms created yet.\nTap the + button to create one now!</string>
     <string name="pick_tasklist_button_text">Pick a list of tasks ...</string>
+    <string name="title_activity_alarm_details">AlarmDetailsActivity</string>
+    <string name="alarm_details_submit_button">Modify</string>
 </resources>

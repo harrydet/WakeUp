@@ -30,13 +30,17 @@
         <ToggleButton
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/alarm_status_button"/>
+            android:id="@+id/alarm_status_button"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/alarm_delete_button"
-            android:text="@string/alarm_list_button_delete"/>
+            android:text="@string/alarm_list_button_delete"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
     </LinearLayout>
 
 
