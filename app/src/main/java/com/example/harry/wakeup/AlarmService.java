@@ -70,6 +70,10 @@ public class AlarmService extends IntentService {
 
         expandedView.setTextViewText(R.id.notification_tasks_text, taskMessage);
 
+        Intent myIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        myIntent.putExtra("silence", 1);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1337, myIntent, 0);
+
         Notification notification = new NotificationCompat.Builder(
                 getApplicationContext())
                 .setSmallIcon(R.drawable.ic_alarm_clock)
@@ -79,6 +83,9 @@ public class AlarmService extends IntentService {
                 .setContentIntent(contentIntent)
                 .setContentTitle("Notification!!!")
                 .setContentText(msg)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .addAction(R.drawable.ic_silence, "Silence", pendingIntent)
+                .setStyle(new NotificationCompat.BigTextStyle())
                 .build();
         notification.bigContentView = expandedView;
 

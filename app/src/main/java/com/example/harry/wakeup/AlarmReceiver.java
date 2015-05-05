@@ -21,6 +21,11 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        if(intent.getIntExtra("silence", -1) != -1){
+            Intent stopIntent = new Intent(context, RingtonePlayingService.class);
+            context.stopService(stopIntent);
+        }
+
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

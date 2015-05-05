@@ -103,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // insert row
         long tasklist_id = db.insert(TABLE_TASKLIST, null, values);
 
-        // assigning tags to todo
+        // assigning tags to to do
         for (long task_id : task_ids) {
             createTaskTaskList(tasklist_id, task_id);
         }
@@ -200,7 +200,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 al.setTime(c.getInt(c.getColumnIndex(KEY_ALARM_DATE)));
                 al.setTaskList(getTaskList(c.getInt(c.getColumnIndex(KEY_ALARM_TASKLIST))));
 
-                // adding to todo list
+                // adding to to do list
                 alarms.add(al);
             } while (c.moveToNext());
         }
@@ -247,7 +247,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 tl.setListName((c.getString(c.getColumnIndex(KEY_TASKLIST_NAME))));
                 tl.setListSubText(c.getString(c.getColumnIndex(KEY_TASKLIST_SUBTEXT)));
 
-                // adding to todo list
+                // adding to to do list
                 taskLists.add(tl);
             } while (c.moveToNext());
         }
@@ -277,7 +277,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 td.setListName((c.getString(c.getColumnIndex(KEY_TASKLIST_NAME))));
                 td.setListSubText(c.getString(c.getColumnIndex(KEY_TASKLIST_SUBTEXT)));
 
-                // adding to todo list
+                // adding to to do list
                 taskLists.add(td);
             } while (c.moveToNext());
         }
