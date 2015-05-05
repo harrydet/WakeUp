@@ -133,7 +133,9 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
                 calendar.set(Calendar.HOUR_OF_DAY, hour);
                 calendar.set(Calendar.MINUTE, minute);
                 Intent myIntent = new Intent(activity, AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(activity, alarms.get((Integer)v.getTag()).getId(), myIntent, 0);
+                myIntent.putExtra("tasklist_id", alarms.get((Integer) v.getTag()).getTaskList().getId());
+                Log.e("PUT", Integer.toString(alarms.get((Integer) v.getTag()).getTaskList().getId()));
+                pendingIntent = PendingIntent.getBroadcast(activity, alarms.get((Integer)v.getTag()).getId(), myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
 
             } else {

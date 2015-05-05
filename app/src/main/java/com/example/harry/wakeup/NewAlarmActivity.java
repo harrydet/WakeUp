@@ -68,7 +68,9 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
                     calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
                     calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
                     Intent myIntent = new Intent(NewAlarmActivity.this, AlarmReceiver.class);
-                    pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, (int) id, myIntent, 0);
+                    Log.e("PUT", Integer.toString(dbHelper.getAlarm(id).getTaskList().getId()));
+                    myIntent.putExtra("tasklist_id", dbHelper.getAlarm(id).getTaskList().getId());
+                    pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, (int) id, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                     alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
                     finish();
                 }

@@ -3,6 +3,7 @@ package com.example.harry.wakeup;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
@@ -83,6 +84,7 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
         SharedPreferences settings = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
         String jsonString = settings.getString("json_object", null/*default value*/);
+        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
 
     }
@@ -134,6 +136,9 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.silence_button:
+                Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
+                alarmManager.cancel(PendingIntent.getBroadcast(getActivity(), 1, myIntent, 0));
+
                 Intent stopIntent = new Intent(getActivity(), RingtonePlayingService.class);
                 getActivity().stopService(stopIntent);
                 break;

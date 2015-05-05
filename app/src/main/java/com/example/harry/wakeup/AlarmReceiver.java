@@ -21,12 +21,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        SharedPreferences settings = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("alarm_text", "Wakey Wakey :)");
-        editor.commit();
-
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -35,6 +29,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         startIntent.putExtra("ringtone-uri", alarmUri);
         context.startService(startIntent);
 
+        Log.e("From Receiver: ", Integer.toString(intent.getIntExtra("tasklist_id", -1)));
         ComponentName comp = new ComponentName(context.getPackageName(), AlarmService.class.getName());
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);
