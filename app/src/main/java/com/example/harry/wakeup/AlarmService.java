@@ -81,13 +81,12 @@ public class AlarmService extends IntentService {
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent)
-                .setContentTitle("Notification!!!")
-                .setContentText(msg)
-                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle("It's time to wake up!")
+                .setContentText("Expand this notification for your list.")
                 .addAction(R.drawable.ic_silence, "Silence", pendingIntent)
-                .setStyle(new NotificationCompat.BigTextStyle())
+                .setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("Today's list").bigText(taskMessage))
                 .build();
-        notification.bigContentView = expandedView;
+        //notification.bigContentView = expandedView;
 
 //        alarmNotificationBuilder.setContentIntent(contentIntent);
         alarmNotificationManager.notify(1, notification);

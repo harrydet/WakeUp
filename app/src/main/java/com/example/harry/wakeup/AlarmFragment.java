@@ -85,6 +85,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
 
         View rootView = inflater.inflate(R.layout.fragment_alarm, container, false);
         fab = (ActionButton) rootView.findViewById(R.id.fab_activity_action_button);
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
         fab.setOnClickListener(this);
 
         emptyListText = (TextView) rootView.findViewById(R.id.empty_alarm_list);
