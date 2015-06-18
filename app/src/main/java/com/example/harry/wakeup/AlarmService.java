@@ -103,7 +103,6 @@ public class AlarmService extends IntentService {
             Bitmap myBitmap = BitmapFactory.decodeStream(input);
             return myBitmap;
         } catch (IOException e) {
-            // Log exception
             return null;
         }
     }

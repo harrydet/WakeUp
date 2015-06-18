@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="2"
     tools:context="com.example.harry.wakeup.ListTaskListFragment">
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.7"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -24,21 +23,17 @@
 
         <ListView
             android:id="@android:id/list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            style="@style/fab_layout_match_width_match_height_style"
+            android:fillViewport="true"
+            >
+        </ListView>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:text="@string/button_text" />
     <!--<Button-->
     <!--android:id="@+id/deleteTasksButton"-->
     <!--android:text="@string/delete_tasks_button_text"-->
     <!--android:layout_width="fill_parent"-->
     <!--android:layout_height="0dp"-->
     <!--android:layout_weight="0.3"/>-->
-</LinearLayout>
+</RelativeLayout>

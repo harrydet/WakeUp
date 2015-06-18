@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.harry.wakeup.adapters.ListTaskListAdapter;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
+import com.software.shell.fab.ActionButton;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private ActionButton fab;
 
     private DatabaseHelper dbHelper;
     private List<TaskList> taskLists;
@@ -109,9 +112,6 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tasklist, container, false);
 
-        addTaskButton = (Button) view.findViewById(R.id.addButton);
-        addTaskButton.setOnClickListener(this);
-
 /*        deleteAllTasksButton = (Button) view.findViewById(R.id.deleteTasksButton);
         deleteAllTasksButton.setOnClickListener(this);*/
 
@@ -165,7 +165,7 @@ public class ListTaskListFragment extends ListFragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.addButton:
+            /*case R.id.addButton:
                 Intent intent = new Intent(getActivity().getApplicationContext(), NewTaskListActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

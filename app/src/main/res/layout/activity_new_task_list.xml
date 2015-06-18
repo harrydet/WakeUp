@@ -1,74 +1,84 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.harry.wakeup.NewTaskListActivity"
     android:orientation="vertical">
 
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleText"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/new_task_title_hint" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/subtitleTextEdit"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/new_task_subtitle_hint" />
 
-    <EditText
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText1"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/new_task_task_hint" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.harry.wakeup.NewTaskListActivity">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:hint="@string/new_task_task_hint"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText3"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:hint="@string/new_task_task_hint"/>
+        <EditText
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_title_hint" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText4"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:hint="@string/new_task_task_hint"/>
+        <EditText
+            android:id="@+id/subtitleTextEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_subtitle_hint" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText5"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:hint="@string/new_task_task_hint"/>
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_task_hint" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/more_tasks_text"
-        android:id="@+id/moreTasksButton"
-        android:layout_gravity="end" />
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_task_hint"
+            android:visibility="gone" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/submit_button_text"
-        android:id="@+id/submitButton"
-        android:layout_gravity="center_horizontal" />
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_task_hint"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_task_hint"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/editText5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/new_task_task_hint"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/moreTasksButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/more_tasks_text" />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/submit_button_text" />
+    </LinearLayout>
 </LinearLayout>

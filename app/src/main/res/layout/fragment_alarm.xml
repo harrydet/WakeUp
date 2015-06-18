@@ -22,12 +22,6 @@
 
     </ListView>
 
-    <com.software.shell.fab.ActionButton
-        android:id="@+id/fab_activity_action_button"
-        style="@style/fab_action_button_style"
-        fab:type="DEFAULT"
-        fab:button_color="@color/abc_primary_text_material_light"
-        />
 
 
 </RelativeLayout>

@@ -2,15 +2,19 @@ package com.example.harry.wakeup;
 
 import android.app.ActionBar;
 import android.app.AlarmManager;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.View;
 
 import com.example.harry.wakeup.adapters.ViewPagerAdapter;
+import com.software.shell.fab.ActionButton;
 
 
-public class MainScreen extends FragmentActivity implements ActionBar.TabListener, ListTaskListFragment.Callbacks {
+public class MainScreen extends FragmentActivity implements ActionBar.TabListener, ListTaskListFragment.Callbacks, View.OnClickListener{
 
     ActionBar actionbar;
     /**
@@ -29,6 +33,10 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     ViewPager viewPager;
     ViewPagerAdapter mViewPagerAdapter;
     private AlarmManager alarmManager;
+
+    private ActionButton fab;
+
+    private int currentTab;
 
     public static MainScreen instance() {
 
@@ -51,23 +59,66 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         viewPager.setCurrentItem(1);
+        currentTab = 1;
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentTab = position;
+                if (currentTab == 0) {
+                    fab.playHideAnimation();
+                    fab.hide();
+                }else if(currentTab == 1){
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_alarm_clock));
+                    if(fab.isHidden()) {
+                        fab.playShowAnimation();
+                        fab.show();
+                    }
+                }else {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
+                    if(fab.isHidden()) {
+                        fab.playShowAnimation();
+                        fab.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        fab = (ActionButton) findViewById(R.id.fab_activity_action_button);
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_alarm_clock));
+        fab.setShowAnimation(ActionButton.Animations.SCALE_UP);
+        fab.setHideAnimation(ActionButton.Animations.SCALE_DOWN);
+
+        fab.setOnClickListener(this);
 
 
     }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
+        currentTab = tab.getPosition();
+        Log.d("Tab", "Selected");
+        fab.playShowAnimation();
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
+        fab.playHideAnimation();
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-
+        currentTab = tab.getPosition();
+        Log.d("Tab", "Reselected");
     }
 
     public AlarmManager getAlarmManager(){
@@ -79,4 +130,32 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
 
     }
 
+    @Override
+    public void onClick(View v) {
+        Log.d("Click", "Clic2k");
+        switch (v.getId()){
+            case R.id.fab_activity_action_button:
+                Log.d("Click", "Click");
+                if(currentTab == 1){
+                    Intent intent = new Intent(this, NewAlarmActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else if(currentTab == 2){
+                    Intent intent = new Intent(this, NewTaskListActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if(hasFocus){
+            fab.playShowAnimation();
+        } else {
+            fab.playHideAnimation();
+        }
+        super.onWindowFocusChanged(hasFocus);
+    }
 }

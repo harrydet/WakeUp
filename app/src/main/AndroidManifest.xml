@@ -9,7 +9,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/MyMaterialTheme" >
         <service
             android:name=".AlarmService"
             android:enabled="true" />
@@ -34,6 +34,8 @@
         <activity
             android:name=".NewTaskListActivity"
             android:label="@string/title_activity_new_task_list" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.harry.wakeup.MainScreen"/>
         </activity>
         <activity
             android:name=".TaskListDetailsActivty"
@@ -42,6 +44,8 @@
         <activity
             android:name=".NewAlarmActivity"
             android:label="@string/title_activity_new_alarm" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.harry.wakeup.MainScreen"/>
         </activity>
         <activity
             android:name=".AlarmDetailsActivity"
