@@ -25,6 +25,9 @@
             android:id="@android:id/list"
             style="@style/fab_layout_match_width_match_height_style"
             android:fillViewport="true"
+            android:dividerHeight="0px"
+            android:divider="#FFCC00"
+
             >
         </ListView>
 

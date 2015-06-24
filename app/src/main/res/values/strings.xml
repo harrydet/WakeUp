@@ -11,26 +11,29 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_text">Create a list</string>
     <string name="title_activity_new_task_list">New list of tasks</string>
     <string name="more_tasks_text">More tasks</string>
     <string name="submit_button_text">Submit</string>
     <string name="delete_button_text">Delete</string>
-    <string name="new_task_title_hint">Title</string>
-    <string name="new_task_subtitle_hint">Subtitle</string>
+    <string name="new_task_title_hint">Title: </string>
+    <string name="new_task_subtitle_hint">Subtitle: </string>
     <string name="new_task_task_hint">Task</string>
-    <string name="title_activity_task_list_details_activty">TaskListDetailsActivty</string>
+    <string name="title_activity_task_list_details_activity">Edit list</string>
     <string name="delete_tasks_button_text">Delete All Tasks</string>
     <string name="empty_tasklist_list">Your task list is empty :( \nAdd some</string>
     <string name="title_activity_new_alarm">Add a new alarm</string>
     <string name="set_button_text">Set</string>
     <string name="alarm_list_button_delete">Delete</string>
-    <string name="empty_alarms_list">No alarms created yet.\nTap the + button to create one now!</string>
-    <string name="pick_tasklist_button_text">Pick a list of tasks ...</string>
-    <string name="title_activity_alarm_details">AlarmDetailsActivity</string>
+    <string name="empty_alarms_list">No alarms created yet.\nTap the alarm button to create one now!</string>
+    <string name="pick_tasklist_button_text">Pick a list of tasks …</string>
+    <string name="title_activity_alarm_details">Edit alarm</string>
     <string name="alarm_details_submit_button">Modify</string>
     <string name="toolbar_new_tasklist_text">New task list</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="action_check_mark">Accept</string>
+    <string name="no_today_tasks">This list will be populated with your tasks for the day the next time your alarm rings</string>
+
 </resources>

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -39,7 +40,9 @@
         </activity>
         <activity
             android:name=".TaskListDetailsActivty"
-            android:label="@string/title_activity_task_list_details_activty" >
+            android:label="@string/title_activity_task_list_details_activity" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.harry.wakeup.MainScreen"/>
         </activity>
         <activity
             android:name=".NewAlarmActivity"
@@ -50,6 +53,8 @@
         <activity
             android:name=".AlarmDetailsActivity"
             android:label="@string/title_activity_alarm_details" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.harry.wakeup.MainScreen"/>
         </activity>
     </application>
 

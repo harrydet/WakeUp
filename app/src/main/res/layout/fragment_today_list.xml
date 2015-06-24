@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.harry.wakeup.ListTaskListFragment"
     android:orientation="vertical"
-    android:weightSum="2">
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.7"/>
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/silence_button"
-        android:text="Silence"/>
+    android:weightSum="2"
+    android:paddingTop="5dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=""
-        android:id="@+id/alarmText"
-        android:layout_marginTop="20dp" />
+        android:id="@+id/empty_today_list"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:gravity="center"
+        android:text="@string/no_today_tasks"
+        android:textColor="@color/faintTextColor"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cardList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 
 </LinearLayout>

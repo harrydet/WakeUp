@@ -1,6 +1,6 @@
 package com.example.harry.wakeup;
 
-import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,7 +21,6 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
     private int TOTAL_VISIBLE;
 
     private Button moreTasksButton;
-    private Button submitButton;
     private EditText[] textFields;
     private EditText titleText;
     private EditText subtitleText;
@@ -40,10 +39,9 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
 
         moreTasksButton = (Button) findViewById(R.id.moreTasksButton);
         moreTasksButton.setOnClickListener(this);
-        submitButton = (Button) findViewById(R.id.submitButton);
-        submitButton.setOnClickListener(this);
 
         titleText = (EditText) findViewById(R.id.titleText);
+
         subtitleText = (EditText) findViewById(R.id.subtitleTextEdit);
 
         textFields = new EditText[TOTAL_EDIT_TEXT];
@@ -53,6 +51,15 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         textFields[3] = (EditText) findViewById(R.id.editText4);
         textFields[4] = (EditText) findViewById(R.id.editText5);
 
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        if (currentapiVersion <= Build.VERSION_CODES.KITKAT){
+            for (EditText textField : textFields) {
+                textField.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+            titleText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            subtitleText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
+
         TOTAL_VISIBLE = 1;
     }
 
@@ -61,14 +68,6 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         switch (v.getId()){
             case R.id.moreTasksButton:
                 showNextEditText();
-                break;
-            case R.id.submitButton:
-                if(fieldsValid()) {
-                    saveListItem();
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Some of the input fields are empty", Toast.LENGTH_LONG).show();
-                }
                 break;
             default:
                 break;
@@ -124,6 +123,14 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
             case R.id.home:
                 this.finish();
                 break;
+            case R.id.action_done:
+                if(fieldsValid()) {
+                    saveListItem();
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Some of the input fields are empty", Toast.LENGTH_LONG).show();
+                }
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,7 +138,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main2, menu);
+        getMenuInflater().inflate(R.menu.accept_icon, menu);
         return true;
     }
 

@@ -2,7 +2,9 @@ package com.example.harry.wakeup.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -31,6 +33,8 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
 
     private AdapterCallback mAdapterCallback;
 
+    private SharedPreferences settings;
+
     public ListTaskListAdapter(Activity activity, List<TaskList> taskLists, Fragment fragment) {
         super();
         this.activity = activity;
@@ -44,6 +48,9 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
         } catch (ClassCastException e) {
             throw new ClassCastException("Fragment must implement AdapterCallback.");
         }
+
+        settings = PreferenceManager
+                .getDefaultSharedPreferences(this.activity.getApplicationContext());
     }
 
     @Override
@@ -84,7 +91,7 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.delete_button:;
+            case R.id.delete_button:
                 deleteItem((Integer) v.getTag());
                 break;
             default:
@@ -93,6 +100,10 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
     }
 
     private void deleteItem(int position){
+        int displayedTaskList = settings.getInt("tasklist_id_to_display", -1);
+        if(taskLists.get(position).getId() == displayedTaskList){
+            settings.edit().remove("tasklist_id_to_display").apply();
+        }
         dbHelper.deleteTaskList(taskLists.get(position).getId(), true);
         taskLists.remove(position);
         notifyDataSetChanged();

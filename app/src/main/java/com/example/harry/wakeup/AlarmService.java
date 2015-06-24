@@ -82,7 +82,7 @@ public class AlarmService extends IntentService {
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent)
                 .setContentTitle("It's time to wake up!")
-                .setContentText("Expand this notification for your list.")
+                .setContentText("Expand this notification for your tasks.")
                 .addAction(R.drawable.ic_silence, "Silence", pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("Today's list").bigText(taskMessage))
                 .build();
@@ -91,20 +91,11 @@ public class AlarmService extends IntentService {
 //        alarmNotificationBuilder.setContentIntent(contentIntent);
         alarmNotificationManager.notify(1, notification);
         Log.d("AlarmService", "Notification Sent");
+
+        SharedPreferences settings = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext());
+        settings.edit().putInt("tasklist_id_to_display", taskListId).apply();
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            return null;
-        }
-    }
 
 }

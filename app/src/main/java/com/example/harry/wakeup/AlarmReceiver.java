@@ -13,13 +13,26 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
+import com.example.harry.wakeup.helpers.DatabaseHelper;
+
+import java.util.Calendar;
+
 /**
  * Created by Harry on 3/4/2015.
  */
 public class AlarmReceiver extends WakefulBroadcastReceiver {
+    private DatabaseHelper dbHelper;
+    private Calendar calendar;
+    private SharedPreferences settings;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        settings = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+
+        calendar = Calendar.getInstance();
+        dbHelper = new DatabaseHelper(context);
 
         if(intent.getIntExtra("silence", -1) != -1){
             Intent stopIntent = new Intent(context, RingtonePlayingService.class);
@@ -30,14 +43,23 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        Intent startIntent = new Intent(context, RingtonePlayingService.class);
-        startIntent.putExtra("ringtone-uri", alarmUri);
-        context.startService(startIntent);
 
-        Log.e("From Receiver: ", Integer.toString(intent.getIntExtra("tasklist_id", -1)));
-        ComponentName comp = new ComponentName(context.getPackageName(), AlarmService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);
+        long alarmId = settings.getLong("ringing_alarm_id", -2);
+        Alarm alarm = dbHelper.getAlarm(settings.getLong("ringing_alarm_id", -2));
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        int combinedHour = hour*100 + minute;
+        if(alarm != null && combinedHour <= alarm.getTime()) {
+            Intent startIntent = new Intent(context, RingtonePlayingService.class);
+            startIntent.putExtra("ringtone-uri", alarmUri);
+            context.startService(startIntent);
+
+            Log.e("From Receiver: ", Integer.toString(intent.getIntExtra("tasklist_id", -1)));
+
+            ComponentName comp = new ComponentName(context.getPackageName(), AlarmService.class.getName());
+            startWakefulService(context, (intent.setComponent(comp)));
+            setResultCode(Activity.RESULT_OK);
+        }
     }
 
 

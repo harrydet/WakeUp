@@ -18,20 +18,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/task_list_title"
         android:textSize="20pt"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"/>
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/task_list_subtitle"
-        android:textSize="12pt"/>
+        android:textSize="12pt"
+        android:textColor="@color/colorAccent"/>
     </LinearLayout>
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.12"
-        android:id="@+id/modifyButton"
-        android:text="Modify"/>
 
 
 </LinearLayout>

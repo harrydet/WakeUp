@@ -77,6 +77,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
         this.mAdapter = new AlarmListAdapter(getActivity(), alarmsList, this);
         setListAdapter(mAdapter);
 
+
     }
 
     @Override
@@ -116,8 +117,6 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        getListView().setDivider(new ColorDrawable(Color.BLUE));
-        getListView().setDividerHeight(1);
     }
 
     @Override

@@ -1,27 +1,22 @@
 package com.example.harry.wakeup;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.ToggleButton;
 
-import java.util.Calendar;
+import com.example.harry.wakeup.adapters.AlarmListAdapter;
+import com.example.harry.wakeup.adapters.CardViewAdapter;
+import com.example.harry.wakeup.helpers.DatabaseHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -32,7 +27,7 @@ import java.util.Calendar;
  * Use the {@link TodayListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayListFragment extends ListFragment implements View.OnClickListener{
+public class TodayListFragment extends Fragment implements View.OnClickListener, AlarmListAdapter.AdapterCallback{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,14 +37,16 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
     private String mParam1;
     private String mParam2;
 
-    AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
-    private TimePicker alarmTimePicker;
-    private static AlarmActivity inst;
-    private TextView alarmTextView;
-    private Ringtone ringtone;
+    private DatabaseHelper dbHelper;
+    private List<TaskList> taskLists;
+
+    private CardViewAdapter adapter;
 
     private OnFragmentInteractionListener mListener;
+    private TextView emptyList;
+    List<Task> items;
+    int taskListId;
+    SharedPreferences settings;
 
     /**
      * Use this factory method to create a new instance of
@@ -81,10 +78,22 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        SharedPreferences settings = PreferenceManager
+        settings = PreferenceManager
                 .getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String jsonString = settings.getString("json_object", null/*default value*/);
-        alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        taskListId = settings.getInt("tasklist_id_to_display", -1);
+
+        dbHelper = new DatabaseHelper(getActivity().getApplicationContext());
+
+
+
+        if(taskListId != -1) {
+            TaskList currentList = dbHelper.getTaskList(taskListId);
+            items = dbHelper.getTasksByTaskList(currentList);
+        } else{
+            items = new ArrayList<>();
+        }
+        adapter = new CardViewAdapter(items);
+
 
 
     }
@@ -94,18 +103,18 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_today_list, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.cardList);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setAdapter(adapter);
 
-        alarmTextView = (TextView) rootView.findViewById(R.id.alarmText);
-        Button silence = (Button) rootView.findViewById(R.id.silence_button);
-        silence.setOnClickListener(this);
-
-        SharedPreferences settings = PreferenceManager
-                .getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String alarmTextString = settings.getString("alarm_text", null/*default value*/);
-        if(alarmTextString != null){
-            alarmTextView.setText(alarmTextString);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.remove("alarm_text");
+        emptyList = (TextView) rootView.findViewById(R.id.empty_today_list);
+        if(taskListId == -1){
+            emptyList.setVisibility(View.VISIBLE);
+        } else {
+            emptyList.setVisibility(View.GONE);
         }
 
         return rootView;
@@ -115,6 +124,31 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        taskListId = settings.getInt("tasklist_id_to_display", -1);
+        if(taskListId != -1) {
+            TaskList currentList = dbHelper.getTaskList(taskListId);
+            if(currentList != null) {
+                items = dbHelper.getTasksByTaskList(currentList);
+                adapter.updateDataset(items);
+            }
+        } else{
+            items = new ArrayList<>();
+        }
+
+        if(taskListId == -1){
+            emptyList.setVisibility(View.VISIBLE);
+        }else if(dbHelper.getTaskList(taskListId) == null){
+            items = null;
+            adapter.updateDataset(items);
+        }else{
+            emptyList.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -135,18 +169,18 @@ public class TodayListFragment extends ListFragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.silence_button:
-                Intent myIntent = new Intent(getActivity(), AlarmReceiver.class);
-                alarmManager.cancel(PendingIntent.getBroadcast(getActivity(), 1, myIntent, 0));
 
-                Intent stopIntent = new Intent(getActivity(), RingtonePlayingService.class);
-                getActivity().stopService(stopIntent);
-                break;
         }
     }
 
-    public void setAlarmText(String alarmText) {
-        alarmTextView.setText(alarmText);
+    @Override
+    public void onMethodCallback() {
+        if(items.size() == 0){
+            emptyList.setVisibility(View.VISIBLE);
+        } else {
+            emptyList.setVisibility(View.GONE);
+        }
     }
+
 
 }

@@ -47,25 +47,19 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         inst = this;
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            setAlarmText(extras.getString("msg"));
-        }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        alarmTextView = (TextView) findViewById(R.id.alarmText);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Button silence = (Button) findViewById(R.id.silence_button);
-        silence.setOnClickListener(this);
+
+
 
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            setAlarmText(extras.getString("msg"));
-        }
     }
 
     public void silence() {
@@ -73,16 +67,13 @@ public class AlarmActivity extends Activity implements View.OnClickListener {
         this.stopService(stopIntent);
     }
 
-    public void setAlarmText(String alarmText) {
-        alarmTextView.setText(alarmText);
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.silence_button:
+            /*case R.id.silence_button:
                 silence();
-                break;
+                break;*/
             default:
                 break;
         }

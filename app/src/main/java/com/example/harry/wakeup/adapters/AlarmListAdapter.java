@@ -5,7 +5,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.example.harry.wakeup.Alarm;
 import com.example.harry.wakeup.AlarmReceiver;
 import com.example.harry.wakeup.R;
 import com.example.harry.wakeup.RingtonePlayingService;
+import com.example.harry.wakeup.TaskList;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import org.w3c.dom.Text;
@@ -42,10 +45,13 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
     AlarmManager alarmManager;
     DatabaseHelper dbHelper;
     Button deleteAlarm;
+    private SharedPreferences settings;
 
     private AdapterCallback mAdapterCallback;
 
     public AlarmListAdapter(Activity activity, List<Alarm> alarms, Fragment fragment){
+        settings = PreferenceManager
+                .getDefaultSharedPreferences(activity.getApplicationContext());
         this.alarms = alarms;
         this.activity = activity;
         this.mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -84,7 +90,6 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
         TextView time =  (TextView)V.findViewById(R.id.time_text);
         int hour = alarms.get(position).getTime()/100;
         int minute = alarms.get(position).getTime()%100;
-        time.setTextColor(Color.BLACK);
 
         if(hour < 10){
             time.setText("0" + hour + ":" + minute);
@@ -95,7 +100,15 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
         }
 
         TextView alarmSubText = (TextView)V.findViewById(R.id.time_sub_text);
-        alarmSubText.setText(alarms.get(position).getTaskList().getListName());
+        TaskList alarmTaskList = alarms.get(position).getTaskList();
+        if(alarmTaskList == null){
+            alarmSubText.setText("No list assigned...");
+            alarmSubText.setTextColor(activity.getResources().getColor(R.color.faintTextColor));
+            alarmSubText.setTextSize(20);
+        } else {
+            alarmSubText.setText(alarmTaskList.getListName());
+        }
+
 
         alarmToggle = (ToggleButton) V.findViewById(R.id.alarm_status_button);
         alarmToggle.setChecked(alarms.get(position).getStatus());
@@ -123,7 +136,7 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
             }
         } else {
             boolean on = ((ToggleButton) v).isChecked();
-            if(on){
+            if(on && alarms.get((Integer) v.getTag()).getTaskList() != null){
                 alarms.get((Integer) v.getTag()).setStatus(true);
                 dbHelper.updateAlarm(alarms.get((Integer) v.getTag()));
                 Log.d("AlarmActivity", "Alarm On");
@@ -134,11 +147,12 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
                 calendar.set(Calendar.MINUTE, minute);
                 Intent myIntent = new Intent(activity, AlarmReceiver.class);
                 myIntent.putExtra("tasklist_id", alarms.get((Integer) v.getTag()).getTaskList().getId());
+                settings.edit().putLong("ringing_alarm_id", alarms.get((Integer) v.getTag()).getId()).apply();
                 Log.e("PUT", Integer.toString(alarms.get((Integer) v.getTag()).getTaskList().getId()));
                 pendingIntent = PendingIntent.getBroadcast(activity, alarms.get((Integer)v.getTag()).getId(), myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                 alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
 
-            } else {
+            } else if (!on && alarms.get((Integer) v.getTag()).getTaskList() != null){
                 alarms.get((Integer) v.getTag()).setStatus(false);
                 dbHelper.updateAlarm(alarms.get((Integer) v.getTag()));
                 Intent myIntent = new Intent(activity, AlarmReceiver.class);

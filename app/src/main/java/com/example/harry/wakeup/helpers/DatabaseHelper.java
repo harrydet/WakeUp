@@ -153,8 +153,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null)
+        if (c != null && c.getCount() != 0) {
             c.moveToFirst();
+        } else {
+            return null;
+        }
 
         Alarm al = new Alarm();
         al.setId(c.getInt(c.getColumnIndex(KEY_ID)));
@@ -219,8 +222,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null)
+        if (c != null && c.getCount() != 0){
             c.moveToFirst();
+        } else {
+            return null;
+        }
+
 
         TaskList tl = new TaskList();
         tl.setId(c.getInt(c.getColumnIndex(KEY_ID)));
@@ -312,6 +319,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.delete(TABLE_TASKLIST, KEY_ID + " = ?",
                 new String[] { String.valueOf(tasklist_id) });
+
+        String sql = "UPDATE " + TABLE_ALARM + " SET " + KEY_ALARM_TASKLIST + "=-1 WHERE " +
+                KEY_ALARM_TASKLIST + "=" + String.valueOf(tasklist_id);
+        db.execSQL(sql);
+
     }
 
     public long createTask(Task task) {

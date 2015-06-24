@@ -1,5 +1,9 @@
 package com.example.harry.wakeup;
 
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
 /**
  * Created by Harry on 05/04/2015.
  */
@@ -32,4 +36,6 @@ public class Task {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }
