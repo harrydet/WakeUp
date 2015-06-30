@@ -2,14 +2,12 @@ package com.example.harry.wakeup;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +27,7 @@ import java.util.List;
 import me.drakeet.materialdialog.MaterialDialog;
 
 
-public class NewAlarmActivity extends ActionBarActivity implements View.OnClickListener{
+public class NewAlarmActivity extends ActionBarActivity implements View.OnClickListener {
 
     AlarmManager alarmManager;
     private PendingIntent pendingIntent;
@@ -51,7 +49,7 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion <= Build.VERSION_CODES.KITKAT){
+        if (currentapiVersion <= Build.VERSION_CODES.KITKAT) {
             alarmTimePicker.setBackgroundColor(getResources().getColor(R.color.colorAccent));
         }
 
@@ -62,35 +60,30 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
         dbHelper = new DatabaseHelper(this);
     }
 
-    private void setButtonHandling(){
-        long id = createRecord();
-        if(id == -1) {
+    private void setButtonHandling() {
+        int id = createRecord();
+        if (id == -1) {
             Toast.makeText(getApplicationContext(), "Need to select a tasklist...", Toast.LENGTH_SHORT).show();
         } else {
-            Log.d("AlarmActivity", "Alarm On");
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-            Intent myIntent = new Intent(NewAlarmActivity.this, AlarmReceiver.class);
-            Log.e("PUT", Integer.toString(dbHelper.getAlarm(id).getTaskList().getId()));
-            myIntent.putExtra("tasklist_id", dbHelper.getAlarm(id).getTaskList().getId());
-            settings.edit().putLong("ringing_alarm_id", dbHelper.getAlarm(id).getId()).apply();
-            pendingIntent = PendingIntent.getBroadcast(NewAlarmActivity.this, (int) id, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+            calendar.set(Calendar.SECOND, 0);
+            dbHelper.getAlarm(id).engage(calendar, alarmManager, this);
             finish();
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.taskListButton:
                 final MaterialDialog materialDialog = new MaterialDialog(this);
                 materialDialog.setTitle("Pick a list of tasks");
 
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item);
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item);
                 final List<TaskList> taskLists = dbHelper.getAllTaskLists();
-                for(int i = 0; i < taskLists.size(); i++){
+                for (int i = 0; i < taskLists.size(); i++) {
                     arrayAdapter.add(taskLists.get(i).getListName());
                 }
 
@@ -121,17 +114,17 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
         }
     }
 
-    public long createRecord(){
+    public int createRecord() {
         int hour = alarmTimePicker.getCurrentHour();
         int minute = alarmTimePicker.getCurrentMinute();
-        int combined = hour*100 + minute;
+        int combined = hour * 100 + minute;
         Alarm alarm = new Alarm();
         alarm.setStatus(true);
         alarm.setTime(combined);
-        if(taskListButton.getTag() == -1){
+        if (taskListButton.getTag() == -1) {
             return -1;
         } else {
-            alarm.setTaskList(dbHelper.getTaskList((int)taskListButton.getTag()));
+            alarm.setTaskList(dbHelper.getTaskList((int) taskListButton.getTag()));
             return dbHelper.createAlarm(alarm);
         }
 
@@ -139,7 +132,7 @@ public class NewAlarmActivity extends ActionBarActivity implements View.OnClickL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.home:
                 this.finish();
                 break;

@@ -59,7 +59,7 @@
             android:id="@+id/fab_activity_action_button"
             style="@style/fab_action_button_style"
             fab:type="DEFAULT"
-            fab:button_color="@color/colorPrimary"
+            fab:button_color="@color/colorFab"
             />
 
     </RelativeLayout>

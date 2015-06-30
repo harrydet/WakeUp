@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.harry.wakeup.adapters.AlarmListAdapter;
 import com.example.harry.wakeup.adapters.CardViewAdapter;
+import com.example.harry.wakeup.adapters.ListTaskListAdapter;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import java.util.ArrayList;
@@ -27,26 +28,27 @@ import java.util.List;
  * Use the {@link TodayListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TodayListFragment extends Fragment implements View.OnClickListener, AlarmListAdapter.AdapterCallback{
+public class TodayListFragment extends Fragment implements View.OnClickListener, AlarmListAdapter.AdapterCallback,
+        ListTaskListAdapter.AdapterCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private DatabaseHelper dbHelper;
-    private List<TaskList> taskLists;
-
-    private CardViewAdapter adapter;
-
-    private OnFragmentInteractionListener mListener;
-    private TextView emptyList;
     List<Task> items;
     int taskListId;
     SharedPreferences settings;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private DatabaseHelper dbHelper;
+    private List<TaskList> taskLists;
+    private CardViewAdapter adapter;
+    private OnFragmentInteractionListener mListener;
+    private TextView emptyList;
+
+    public TodayListFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -66,10 +68,6 @@ public class TodayListFragment extends Fragment implements View.OnClickListener,
         return fragment;
     }
 
-    public TodayListFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,15 +83,13 @@ public class TodayListFragment extends Fragment implements View.OnClickListener,
         dbHelper = new DatabaseHelper(getActivity().getApplicationContext());
 
 
-
-        if(taskListId != -1) {
+        if (taskListId != -1) {
             TaskList currentList = dbHelper.getTaskList(taskListId);
             items = dbHelper.getTasksByTaskList(currentList);
-        } else{
+        } else {
             items = new ArrayList<>();
         }
         adapter = new CardViewAdapter(items);
-
 
 
     }
@@ -111,7 +107,7 @@ public class TodayListFragment extends Fragment implements View.OnClickListener,
         recyclerView.setAdapter(adapter);
 
         emptyList = (TextView) rootView.findViewById(R.id.empty_today_list);
-        if(taskListId == -1){
+        if (taskListId == -1) {
             emptyList.setVisibility(View.VISIBLE);
         } else {
             emptyList.setVisibility(View.GONE);
@@ -127,28 +123,54 @@ public class TodayListFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-
+        adapter.updateDataset(items);
         taskListId = settings.getInt("tasklist_id_to_display", -1);
-        if(taskListId != -1) {
+        if (taskListId != -1) {
             TaskList currentList = dbHelper.getTaskList(taskListId);
-            if(currentList != null) {
+            if (currentList != null) {
                 items = dbHelper.getTasksByTaskList(currentList);
+                refreshTodayTasks();
                 adapter.updateDataset(items);
             }
-        } else{
+        } else {
             items = new ArrayList<>();
+            adapter.updateDataset(items);
         }
 
-        if(taskListId == -1){
-            emptyList.setVisibility(View.VISIBLE);
-        }else if(dbHelper.getTaskList(taskListId) == null){
-            items = null;
+        if (taskListId == -1) {
+            items = new ArrayList<>();
             adapter.updateDataset(items);
-        }else{
+            emptyList.setVisibility(View.VISIBLE);
+        } else if (dbHelper.getTaskList(taskListId) == null) {
+            items = null;
+            adapter.updateDataset(null);
+        } else {
+            refreshTodayTasks();
+            adapter.updateDataset(items);
             emptyList.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onMethodCallback() {
+        if (items.size() == 0) {
+            adapter.updateDataset(items);
+            emptyList.setVisibility(View.VISIBLE);
+        } else {
+            emptyList.setVisibility(View.GONE);
+        }
+    }
+
+    public void refreshTodayTasks() {
+        TaskList currentList = dbHelper.getTaskList(taskListId);
+        this.items = dbHelper.getTasksByTaskList(currentList);
     }
 
     /**
@@ -162,24 +184,6 @@ public class TodayListFragment extends Fragment implements View.OnClickListener,
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onTodayListFragmentInteraction(String id);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-
-        }
-    }
-
-    @Override
-    public void onMethodCallback() {
-        if(items.size() == 0){
-            emptyList.setVisibility(View.VISIBLE);
-        } else {
-            emptyList.setVisibility(View.GONE);
-        }
     }
 
 

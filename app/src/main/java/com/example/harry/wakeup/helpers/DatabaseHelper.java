@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.harry.wakeup.Alarm;
 import com.example.harry.wakeup.Task;
@@ -89,7 +88,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db){
         super.onOpen(db);
-        Log.e("Executed: ", "PRAGMA");
+        //Log.e("Executed: ", "PRAGMA");
         db.execSQL("PRAGMA foreign_keys = ON");
     }
 
@@ -111,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return tasklist_id;
     }
 
-    public long createAlarm(Alarm alarm){
+    public int createAlarm(Alarm alarm){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -124,7 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_ALARM_TASKLIST, alarm.getTaskList().getId());
 
         long alarm_id = db.insert(TABLE_ALARM, null, values);
-        return alarm_id;
+        return (int)alarm_id;
     }
 
     public int updateAlarm(Alarm alarm) {
@@ -181,10 +180,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Alarm> getAllAlarms(){
-        List<Alarm> alarms = new ArrayList<Alarm>();
+        List<Alarm> alarms = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_ALARM;
 
-        Log.e(LOG, selectQuery);
+        //Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -218,7 +217,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_TASKLIST + " WHERE "
                 + KEY_ID + " = " + tasklist_id;
 
-        Log.e(LOG, selectQuery);
+        //Log.e(LOG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -238,10 +237,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<TaskList> getAllTaskLists() {
-        List<TaskList> taskLists = new ArrayList<TaskList>();
+        List<TaskList> taskLists = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_TASKLIST;
 
-        Log.e(LOG, selectQuery);
+        //Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -263,7 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<TaskList> getAllTaskListsByTask(String task_name) {
-        List<TaskList> taskLists = new ArrayList<TaskList>();
+        List<TaskList> taskLists = new ArrayList<>();
 
         String selectQuery = "SELECT  * FROM " + TABLE_TASKLIST + " td, "
                 + TABLE_TASK + " tg, " + TABLE_TASK_TASKLIST + " tt WHERE tg."
@@ -271,7 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " = " + "tt." + KEY_TASK_ID + " AND td." + KEY_ID + " = "
                 + "tt." + KEY_TASKLIST_ID;
 
-        Log.e(LOG, selectQuery);
+        //Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -334,16 +333,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_TASK_DESCRIPTION, task.getDescription());
 
         // insert row
-        long task_id = db.insert(TABLE_TASK, null, values);
 
-        return task_id;
+        return db.insert(TABLE_TASK, null, values);
     }
 
     public List<Task> getAllTasks() {
-        List<Task> tags = new ArrayList<Task>();
+        List<Task> tags = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_TASK;
 
-        Log.e(LOG, selectQuery);
+        //Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -363,13 +361,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Task> getTasksByTaskList(TaskList taskList){
-        List<Task> tasks = new ArrayList<Task>();
+        List<Task> tasks = new ArrayList<>();
 
         String selectQuery = "SELECT  o.* FROM " + TABLE_TASK_TASKLIST + " AS uo INNER JOIN "
                 + TABLE_TASK + " AS o ON uo." + KEY_TASK_ID + " = o."
                 + KEY_ID + " WHERE uo." + KEY_TASKLIST_ID + " = " +  taskList.getId();
 
-        Log.e(LOG, selectQuery);
+        //Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -422,9 +420,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_TASKLIST_ID, tasklist_id);
         values.put(KEY_TASK_ID, task_id);
 
-        long id = db.insert(TABLE_TASK_TASKLIST, null, values);
-
-        return id;
+        return db.insert(TABLE_TASK_TASKLIST, null, values);
     }
 
     public int updateTaskListTsk(long id, long task_id) {

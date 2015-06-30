@@ -1,8 +1,6 @@
 package com.example.harry.wakeup;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -19,7 +17,7 @@ import com.software.shell.fab.ActionButton;
 import java.util.List;
 
 
-public class AlarmFragment extends ListFragment implements View.OnClickListener, AlarmListAdapter.AdapterCallback{
+public class AlarmFragment extends ListFragment implements View.OnClickListener, AlarmListAdapter.AdapterCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -40,6 +38,10 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
 
     private TextView emptyListText;
 
+    public AlarmFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -56,10 +58,6 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public AlarmFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -87,7 +85,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
         View rootView = inflater.inflate(R.layout.fragment_alarm, container, false);
 
         emptyListText = (TextView) rootView.findViewById(R.id.empty_alarm_list);
-        if(alarmsList.size() == 0){
+        if (alarmsList.size() == 0) {
             emptyListText.setVisibility(View.VISIBLE);
         } else {
             emptyListText.setVisibility(View.GONE);
@@ -103,11 +101,11 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         this.alarmsList = dbHelper.getAllAlarms();
         ((AlarmListAdapter) this.mAdapter).updateDataset(this.alarmsList);
-        if(this.alarmsList.size() == 0){
+        if (this.alarmsList.size() == 0) {
             emptyListText.setVisibility(View.VISIBLE);
         } else {
             emptyListText.setVisibility(View.GONE);
@@ -115,7 +113,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -133,7 +131,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
 
     @Override
     public void onMethodCallback() {
-        if(alarmsList.size() == 0){
+        if (alarmsList.size() == 0) {
             emptyListText.setVisibility(View.VISIBLE);
         } else {
             emptyListText.setVisibility(View.GONE);
@@ -141,7 +139,7 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id){
+    public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
 
         Intent detailIntent = new Intent(getActivity(), AlarmDetailsActivity.class);
@@ -161,8 +159,6 @@ public class AlarmFragment extends ListFragment implements View.OnClickListener,
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onAlarmFragmentInteraction(String id);
     }
 
 }

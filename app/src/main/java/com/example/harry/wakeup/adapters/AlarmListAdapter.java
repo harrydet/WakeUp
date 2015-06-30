@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +31,7 @@ import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import org.w3c.dom.Text;
 
-/**
- * Created by Harry on 13/03/2015.
- */
+
 public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListener {
 
     List<Alarm> alarms;
@@ -90,8 +87,9 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
         TextView time =  (TextView)V.findViewById(R.id.time_text);
         int hour = alarms.get(position).getTime()/100;
         int minute = alarms.get(position).getTime()%100;
-
-        if(hour < 10){
+        if(minute < 10 && hour < 10){
+          time.setText("0" + hour + ":0" + minute);
+        } else if(hour < 10){
             time.setText("0" + hour + ":" + minute);
         } else if(minute < 10){
             time.setText(hour + ":0" + minute);
@@ -139,18 +137,13 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
             if(on && alarms.get((Integer) v.getTag()).getTaskList() != null){
                 alarms.get((Integer) v.getTag()).setStatus(true);
                 dbHelper.updateAlarm(alarms.get((Integer) v.getTag()));
-                Log.d("AlarmActivity", "Alarm On");
                 Calendar calendar = Calendar.getInstance();
                 int hour = alarms.get((Integer) v.getTag()).getTime()/100;
                 int minute = alarms.get((Integer) v.getTag()).getTime()%100;
                 calendar.set(Calendar.HOUR_OF_DAY, hour);
                 calendar.set(Calendar.MINUTE, minute);
-                Intent myIntent = new Intent(activity, AlarmReceiver.class);
-                myIntent.putExtra("tasklist_id", alarms.get((Integer) v.getTag()).getTaskList().getId());
-                settings.edit().putLong("ringing_alarm_id", alarms.get((Integer) v.getTag()).getId()).apply();
-                Log.e("PUT", Integer.toString(alarms.get((Integer) v.getTag()).getTaskList().getId()));
-                pendingIntent = PendingIntent.getBroadcast(activity, alarms.get((Integer)v.getTag()).getId(), myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+                calendar.set(Calendar.SECOND, 0);
+                alarms.get((Integer) v.getTag()).engage(calendar, alarmManager, activity);
 
             } else if (!on && alarms.get((Integer) v.getTag()).getTaskList() != null){
                 alarms.get((Integer) v.getTag()).setStatus(false);
@@ -170,7 +163,7 @@ public class AlarmListAdapter  extends BaseAdapter implements View.OnClickListen
         notifyDataSetChanged();
     }
 
-    public static interface AdapterCallback {
+    public interface AdapterCallback {
         void onMethodCallback();
     }
 }

@@ -1,10 +1,9 @@
 package com.example.harry.wakeup;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 
-public class NewTaskListActivity extends ActionBarActivity implements View.OnClickListener{
+public class NewTaskListActivity extends ActionBarActivity implements View.OnClickListener {
 
     private static int TOTAL_EDIT_TEXT = 5;
     private int TOTAL_VISIBLE;
@@ -52,7 +51,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         textFields[4] = (EditText) findViewById(R.id.editText5);
 
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-        if (currentapiVersion <= Build.VERSION_CODES.KITKAT){
+        if (currentapiVersion <= Build.VERSION_CODES.KITKAT) {
             for (EditText textField : textFields) {
                 textField.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             }
@@ -65,7 +64,7 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.moreTasksButton:
                 showNextEditText();
                 break;
@@ -74,20 +73,20 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         }
     }
 
-    private void showNextEditText(){
+    private void showNextEditText() {
         int i = 0;
-        while(i < 5 && textFields[i].isShown()){
+        while (i < 5 && textFields[i].isShown()) {
             i++;
         }
-        if(i < 5){
+        if (i < 5) {
             textFields[i].setVisibility(View.VISIBLE);
             TOTAL_VISIBLE++;
         }
     }
 
-    private void saveListItem(){
+    private void saveListItem() {
         long[] taskIds = new long[TOTAL_VISIBLE];
-        for(int i = 0; i < TOTAL_VISIBLE; i++){
+        for (int i = 0; i < TOTAL_VISIBLE; i++) {
             Task t = new Task();
             t.setName(textFields[i].getText().toString());
             t.setDescription("Sample Description");
@@ -97,17 +96,16 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
         TaskList tl = new TaskList();
         tl.setListName(titleText.getText().toString());
         tl.setListSubText(subtitleText.getText().toString());
-        Log.e("Subtext", subtitleText.getText().toString());
         dbHelper.createTaskList(tl, taskIds);
         dbHelper.closeDB();
     }
 
-    private boolean fieldsValid(){
+    private boolean fieldsValid() {
         boolean valid = true;
         if (!titleText.getText().toString().isEmpty() && !subtitleText.getText().toString().isEmpty()
-                && titleText.getText().toString().matches(".*\\w.*") && subtitleText.getText().toString().matches(".*\\w.*")){
-            for(int i = 0; i < TOTAL_VISIBLE; i++){
-                if(textFields[i].getText().toString().isEmpty() &&  !textFields[i].getText().toString().matches(".*\\w.*")){
+                && titleText.getText().toString().matches(".*\\w.*") && subtitleText.getText().toString().matches(".*\\w.*")) {
+            for (int i = 0; i < TOTAL_VISIBLE; i++) {
+                if (textFields[i].getText().toString().isEmpty() && !textFields[i].getText().toString().matches(".*\\w.*")) {
                     valid = false;
                 }
             }
@@ -119,12 +117,12 @@ public class NewTaskListActivity extends ActionBarActivity implements View.OnCli
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.home:
                 this.finish();
                 break;
             case R.id.action_done:
-                if(fieldsValid()) {
+                if (fieldsValid()) {
                     saveListItem();
                     finish();
                 } else {

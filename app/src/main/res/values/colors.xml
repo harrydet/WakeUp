@@ -8,4 +8,5 @@
 <color name="oppositeColor">#5D6977</color>
 <color name="colorAccent">#445160</color>
 <color name="faintTextColor">#808080</color>
+<color name="colorFab">#2ecc71</color>
 </resources>

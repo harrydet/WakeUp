@@ -7,32 +7,21 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.example.harry.wakeup.helpers.DatabaseHelper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
-/**
- * Created by Harry on 3/4/2015.
- */
 public class AlarmService extends IntentService {
     private NotificationManager alarmNotificationManager;
     private DatabaseHelper dbHelper;
     private int taskListId;
 
-       public AlarmService() {
+    public AlarmService() {
         super("AlarmService");
     }
 
@@ -45,7 +34,6 @@ public class AlarmService extends IntentService {
     public void sendNotification(String msg) {
         dbHelper = new DatabaseHelper(this);
 
-        Log.d("AlarmService", "Preparing to send notification...: " + msg);
         alarmNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent mainScreeIntent = new Intent(this, MainScreen.class);
@@ -63,8 +51,8 @@ public class AlarmService extends IntentService {
         expandedView.setTextViewText(R.id.notification_colored_text, "Colored Text!");
 
         List<Task> tasks = dbHelper.getTasksByTaskList(dbHelper.getTaskList(taskListId));
-        String taskMessage = "\n" + "\n";
-        for(int i = 0; i < tasks.size(); i++){
+        String taskMessage = "\n";
+        for (int i = 0; i < tasks.size(); i++) {
             taskMessage += (i + 1) + ". " + tasks.get(i).getName() + "\n\n";
         }
 
@@ -83,14 +71,12 @@ public class AlarmService extends IntentService {
                 .setContentIntent(contentIntent)
                 .setContentTitle("It's time to wake up!")
                 .setContentText("Expand this notification for your tasks.")
-                .addAction(R.drawable.ic_silence, "Silence", pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle("Today's list").bigText(taskMessage))
                 .build();
         //notification.bigContentView = expandedView;
 
 //        alarmNotificationBuilder.setContentIntent(contentIntent);
         alarmNotificationManager.notify(1, notification);
-        Log.d("AlarmService", "Notification Sent");
 
         SharedPreferences settings = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());

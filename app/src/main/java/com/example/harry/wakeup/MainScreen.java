@@ -3,20 +3,18 @@ package com.example.harry.wakeup;
 import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 import com.example.harry.wakeup.adapters.ViewPagerAdapter;
 import com.software.shell.fab.ActionButton;
 
 
-public class MainScreen extends FragmentActivity implements ActionBar.TabListener, ListTaskListFragment.Callbacks, View.OnClickListener{
+public class MainScreen extends FragmentActivity implements ActionBar.TabListener, ListTaskListFragment.Callbacks, View.OnClickListener {
 
-    ActionBar actionbar;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -26,7 +24,7 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private static MainScreen inst;
-
+    ActionBar actionbar;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -72,15 +70,15 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
                 if (currentTab == 0) {
                     fab.playHideAnimation();
                     fab.hide();
-                }else if(currentTab == 1){
+                } else if (currentTab == 1) {
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_alarm_clock));
-                    if(fab.isHidden()) {
+                    if (fab.isHidden()) {
                         fab.playShowAnimation();
                         fab.show();
                     }
-                }else {
+                } else {
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
-                    if(fab.isHidden()) {
+                    if (fab.isHidden()) {
                         fab.playShowAnimation();
                         fab.show();
                     }
@@ -106,7 +104,6 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     @Override
     public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
         currentTab = tab.getPosition();
-        Log.d("Tab", "Selected");
         fab.playShowAnimation();
     }
 
@@ -118,29 +115,26 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
     @Override
     public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
         currentTab = tab.getPosition();
-        Log.d("Tab", "Reselected");
     }
 
-    public AlarmManager getAlarmManager(){
+    public AlarmManager getAlarmManager() {
         return alarmManager;
     }
 
     @Override
-    public void onListItemSelected(int id){
+    public void onListItemSelected(int id) {
 
     }
 
     @Override
     public void onClick(View v) {
-        Log.d("Click", "Clic2k");
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.fab_activity_action_button:
-                Log.d("Click", "Click");
-                if(currentTab == 1){
+                if (currentTab == 1) {
                     Intent intent = new Intent(this, NewAlarmActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                } else if(currentTab == 2){
+                } else if (currentTab == 2) {
                     Intent intent = new Intent(this, NewTaskListActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -151,7 +145,7 @@ public class MainScreen extends FragmentActivity implements ActionBar.TabListene
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if(hasFocus){
+        if (hasFocus) {
             fab.playShowAnimation();
         } else {
             fab.playHideAnimation();

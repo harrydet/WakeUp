@@ -21,9 +21,6 @@ import com.example.harry.wakeup.helpers.DatabaseHelper;
 
 import java.util.List;
 
-/**
- * Created by Harry on 4/9/2015.
- */
 public class ListTaskListAdapter extends BaseAdapter implements View.OnClickListener{
 
     private Activity activity;
@@ -103,6 +100,7 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
         int displayedTaskList = settings.getInt("tasklist_id_to_display", -1);
         if(taskLists.get(position).getId() == displayedTaskList){
             settings.edit().remove("tasklist_id_to_display").apply();
+            mAdapterCallback.onMethodCallback();
         }
         dbHelper.deleteTaskList(taskLists.get(position).getId(), true);
         taskLists.remove(position);
@@ -117,7 +115,7 @@ public class ListTaskListAdapter extends BaseAdapter implements View.OnClickList
         notifyDataSetChanged();
     }
 
-    public static interface AdapterCallback {
+    public interface AdapterCallback {
         void onMethodCallback();
     }
 }

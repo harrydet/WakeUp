@@ -1,13 +1,13 @@
 package com.example.harry.wakeup;
 
-import java.util.ArrayList;
-
-/**
- * Created by Harry on 05/04/2015.
- */
 public class TaskList {
 
     private int id;
+    private String listName;
+    private String listSubText;
+
+    public TaskList() {
+    }
 
     public int getId() {
         return id;
@@ -16,9 +16,6 @@ public class TaskList {
     public void setId(int id) {
         this.id = id;
     }
-
-    private String listName;
-    private String listSubText;
 
     public String getListName() {
         return listName;
@@ -34,9 +31,6 @@ public class TaskList {
 
     public void setListSubText(String listSubText) {
         this.listSubText = listSubText;
-    }
-
-    public TaskList(){
     }
 
 }

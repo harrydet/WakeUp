@@ -2,22 +2,18 @@ package com.example.harry.wakeup;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.harry.wakeup.helpers.DatabaseHelper;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -60,7 +56,6 @@ public class TaskListDetailsActivty extends ActionBarActivity implements View.On
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         tasks = dbHelper.getTasksByTaskList(taskList);
-        Log.e("Total tasks 123", Integer.toString(tasks.size()));
         totalTasks = tasks.size();
         editTexts = new EditText[tasks.size()];
         for (int i = 0; i < tasks.size(); i++) {
